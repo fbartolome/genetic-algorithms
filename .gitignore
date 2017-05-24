@@ -1,5 +1,23 @@
-.idea
-*.iml
+##################
+# MAC OSX stuff
+##################
 .DS_Store
-fill_zone.iml
-/target
+
+##################
+# IntelliJ stuff
+##################
+*.iml
+.idea
+
+##################
+# Maven stuff
+##################
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
