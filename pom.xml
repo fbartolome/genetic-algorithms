@@ -52,7 +52,7 @@
 
 
     <build>
-        <finalName>Genetic-Algorithms</finalName>
+        <finalName>genetic-algorithms</finalName>
         <!-- <resources>
             <resource>
                 <directory></directory>
