@@ -1,4 +1,4 @@
-package ar.edu.itba.genetic_algorithms;
+package ar.edu.itba.genetic_algorithms.algorithms;
 
 public enum ReplacementMethod {
 
