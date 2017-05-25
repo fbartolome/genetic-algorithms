@@ -50,7 +50,7 @@ public class ItemsFileReader {
      * @param path       The path to the item file.
      * @param repository The repository in which the {@link Item}s will be stored.
      * @param itemType   The kind of {@link Item} being read.
-     * @throws IOException
+     * @throws IOException If an IO error occurs while reading the file with the given {@code path}.
      */
     public ItemsFileReader(String path, ItemsRepository repository, ItemType itemType) throws IOException {
         this.data = Files.lines(Paths.get(path)).collect(Collectors.toList());
