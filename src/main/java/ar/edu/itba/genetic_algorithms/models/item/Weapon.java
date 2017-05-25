@@ -1,7 +1,7 @@
 package ar.edu.itba.genetic_algorithms.models.item;
 
 /**
- * Created by jbellini on 24/5/17.
+ * Represents a {@link Weapon} {@link Item}.
  */
 public class Weapon extends Item {
     /**
@@ -13,7 +13,19 @@ public class Weapon extends Item {
      * @param life        Item's life.
      * @param resistance  Item's resistance.
      */
-    protected Weapon(double proficiency, double agility, double strength, double life, double resistance) {
+    private Weapon(double proficiency, double agility, double strength, double life, double resistance) {
         super(proficiency, agility, strength, life, resistance);
+    }
+
+    /**
+     * Builds the {@link Weapon}.
+     */
+    public static class Builder extends Item.Builder<Weapon> {
+
+        @Override
+        public Weapon build() {
+            return new Weapon(this.getProficiency(), this.getAgility(), this.getStrength(),
+                    this.getLife(), this.getResistance());
+        }
     }
 }

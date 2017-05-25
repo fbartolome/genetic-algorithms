@@ -1,7 +1,7 @@
 package ar.edu.itba.genetic_algorithms.models.item;
 
 /**
- * Created by jbellini on 24/5/17.
+ * Represents a {@link Gauntlet} {@link Item}.
  */
 public class Gauntlet extends Item {
     /**
@@ -13,7 +13,19 @@ public class Gauntlet extends Item {
      * @param life        Item's life.
      * @param resistance  Item's resistance.
      */
-    protected Gauntlet(double proficiency, double agility, double strength, double life, double resistance) {
+    private Gauntlet(double proficiency, double agility, double strength, double life, double resistance) {
         super(proficiency, agility, strength, life, resistance);
+    }
+
+    /**
+     * Builds the {@link Gauntlet}.
+     */
+    public static class Builder extends Item.Builder<Gauntlet> {
+
+        @Override
+        public Gauntlet build() {
+            return new Gauntlet(this.getProficiency(), this.getAgility(), this.getStrength(),
+                    this.getLife(), this.getResistance());
+        }
     }
 }
