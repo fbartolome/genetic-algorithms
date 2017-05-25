@@ -82,7 +82,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>ar.edu.itba.genetic_algorithms.Main</mainClass>
+                            <mainClass>ar.edu.itba.genetic_algorithms.main.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
