@@ -7,4 +7,8 @@ public interface Individual {
 
     double getFitness();
 
+    Chromosome getChromosome();
+
+
+
 }
