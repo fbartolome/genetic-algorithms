@@ -1,7 +1,7 @@
 package ar.edu.itba.genetic_algorithms.models.item;
 
 /**
- * Created by jbellini on 24/5/17.
+ * Represents a {@link Helmet} {@link Item}.
  */
 public class Helmet extends Item {
     /**
@@ -13,7 +13,19 @@ public class Helmet extends Item {
      * @param life        Item's life.
      * @param resistance  Item's resistance.
      */
-    protected Helmet(double proficiency, double agility, double strength, double life, double resistance) {
+    private Helmet(double proficiency, double agility, double strength, double life, double resistance) {
         super(proficiency, agility, strength, life, resistance);
+    }
+
+    /**
+     * Builds the {@link Helmet}.
+     */
+    public static class Builder extends Item.Builder<Helmet> {
+
+        @Override
+        public Helmet build() {
+            return new Helmet(this.getProficiency(), this.getAgility(), this.getStrength(),
+                    this.getLife(), this.getResistance());
+        }
     }
 }

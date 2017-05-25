@@ -1,7 +1,7 @@
 package ar.edu.itba.genetic_algorithms.models.item;
 
 /**
- * Created by jbellini on 24/5/17.
+ * Represents a {@link Boot} {@link Item}.
  */
 public class Boot extends Item {
     /**
@@ -13,7 +13,19 @@ public class Boot extends Item {
      * @param life        Item's life.
      * @param resistance  Item's resistance.
      */
-    protected Boot(double proficiency, double agility, double strength, double life, double resistance) {
+    private Boot(double proficiency, double agility, double strength, double life, double resistance) {
         super(proficiency, agility, strength, life, resistance);
+    }
+
+    /**
+     * Builds the {@link Boot}.
+     */
+    public static class Builder extends Item.Builder<Boot> {
+
+        @Override
+        public Boot build() {
+            return new Boot(this.getProficiency(), this.getAgility(), this.getStrength(),
+                    this.getLife(), this.getResistance());
+        }
     }
 }

@@ -1,10 +1,9 @@
 package ar.edu.itba.genetic_algorithms.models.item;
 
 /**
- * Created by jbellini on 24/5/17.
+ * Represents an {@link Armor} {@link Item}.
  */
 public class Armor extends Item {
-
     /**
      * Constructor.
      *
@@ -14,7 +13,19 @@ public class Armor extends Item {
      * @param life        Item's life.
      * @param resistance  Item's resistance.
      */
-    protected Armor(double proficiency, double agility, double strength, double life, double resistance) {
+    private Armor(double proficiency, double agility, double strength, double life, double resistance) {
         super(proficiency, agility, strength, life, resistance);
+    }
+
+    /**
+     * Builds the {@link Armor}.
+     */
+    public static class Builder extends Item.Builder<Armor> {
+
+        @Override
+        public Armor build() {
+            return new Armor(this.getProficiency(), this.getAgility(), this.getStrength(),
+                    this.getLife(), this.getResistance());
+        }
     }
 }

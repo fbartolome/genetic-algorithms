@@ -1,7 +1,7 @@
 package ar.edu.itba.genetic_algorithms.models.item;
 
 /**
- * Created by jbellini on 24/5/17.
+ * Represents an item.
  */
 public abstract class Item {
 
@@ -115,4 +115,163 @@ public abstract class Item {
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
+
+
+    /**
+     * Item's builder.
+     *
+     * @param <T> The type of item.
+     */
+    public static abstract class Builder<T extends Item> {
+
+        /**
+         * Item's proficiency.
+         */
+        private double proficiency;
+
+        /**
+         * Item's proficiency.
+         */
+        private double agility;
+
+        /**
+         * Item's proficiency.
+         */
+        private double strength;
+
+        /**
+         * Item's proficiency.
+         */
+        private double life;
+
+        /**
+         * Item's proficiency.
+         */
+        private double resistance;
+
+
+        /**
+         * Proficiency getter.
+         *
+         * @return The proficiency set.
+         */
+        /* package */ double getProficiency() {
+            return proficiency;
+        }
+
+        /**
+         * Agility getter.
+         *
+         * @return The agility set.
+         */
+        /* package */ double getAgility() {
+            return agility;
+        }
+
+        /**
+         * Strength getter.
+         *
+         * @return The strength set.
+         */
+        /* package */ double getStrength() {
+            return strength;
+        }
+
+        /**
+         * Life getter.
+         *
+         * @return The life set.
+         */
+        /* package */ double getLife() {
+            return life;
+        }
+
+        /**
+         * Resistance getter.
+         *
+         * @return The resistance set.
+         */
+        /* package */ double getResistance() {
+            return resistance;
+        }
+
+        /**
+         * Sets the proficiency for the item.
+         *
+         * @param proficiency The proficiency for the item.
+         * @return this (for method chaining).
+         */
+        public Builder setProficiency(double proficiency) {
+            this.proficiency = proficiency;
+            return this;
+        }
+
+        /**
+         * Sets the agility for the item.
+         *
+         * @param agility The agility for the item.
+         * @return this (for method chaining).
+         */
+        public Builder setAgility(double agility) {
+            this.agility = agility;
+            return this;
+        }
+
+        /**
+         * Sets the strength for the item.
+         *
+         * @param strength The strength for the item.
+         * @return this (for method chaining).
+         */
+        public Builder setStrength(double strength) {
+            this.strength = strength;
+            return this;
+        }
+
+        /**
+         * Sets the life for the item.
+         *
+         * @param life The life for the item.
+         * @return this (for method chaining).
+         */
+        public Builder setLife(double life) {
+            this.life = life;
+            return this;
+        }
+
+        /**
+         * Sets the resistance for the item.
+         *
+         * @param resistance The resistance for the item.
+         * @return this (for method chaining).
+         */
+        public Builder setResistance(double resistance) {
+            this.resistance = resistance;
+            return this;
+        }
+
+        /**
+         * Clears the builder.
+         *
+         * @return this (for method chaining).
+         */
+        public Builder clear() {
+            this.proficiency = 0;
+            this.agility = 0;
+            this.strength = 0;
+            this.life = 0;
+            this.resistance = 0;
+            return this;
+        }
+
+        /**
+         * Builds the item.
+         *
+         * @return The built item.
+         */
+        public abstract T build();
+
+
+    }
+
 }
