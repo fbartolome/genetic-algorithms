@@ -1,5 +1,6 @@
 package ar.edu.itba.genetic_algorithms.models.character;
 
+import ar.edu.itba.genetic_algorithms.algorithms.Chromosome;
 import ar.edu.itba.genetic_algorithms.algorithms.Individual;
 import ar.edu.itba.genetic_algorithms.models.item.*;
 
@@ -10,6 +11,9 @@ import java.util.stream.Stream;
 /**
  * Class representing a character.
  * A character is an {@link Individual} for the Genetic Algorithms.
+ *
+ * @implNote A character's genotype is made of the following tuple:
+ * &lt;height, armor, boot, gauntlet, helmet, weapon&gt;
  */
 public abstract class Character implements Individual {
 
@@ -105,6 +109,11 @@ public abstract class Character implements Individual {
         return defense;
     }
 
+    @Override
+    public Chromosome getChromosome() {
+        return new Chromosome(height, equipment.getArmor(), equipment.getBoot(), equipment.getGauntlet(),
+                equipment.getHelmet(), equipment.getWeapon());
+    }
 
     /**
      * Creates the {@link Multipliers} instance to be used during all execution.
