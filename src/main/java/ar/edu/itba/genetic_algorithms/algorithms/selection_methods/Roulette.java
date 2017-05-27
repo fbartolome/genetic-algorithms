@@ -1,6 +1,6 @@
 package ar.edu.itba.genetic_algorithms.algorithms.selection_methods;
 
-import ar.edu.itba.genetic_algorithms.algorithms.IndividualPair;
+import ar.edu.itba.genetic_algorithms.algorithms.ChromosomePair;
 import ar.edu.itba.genetic_algorithms.algorithms.Population;
 
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 public class Roulette implements SelectionMethod {
 
     @Override
-    public List<IndividualPair> select(Population population) {
+    public List<ChromosomePair> select(Population population) {
         return null;
     }
 

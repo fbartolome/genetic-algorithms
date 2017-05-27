@@ -28,7 +28,7 @@ public class Population {
     }
 
 
-    public double getSumFitness(){
+    public double sumFitness(){
         int accum = 0;
         for(Individual i : individuals){
             accum += i.getFitness();
@@ -36,9 +36,13 @@ public class Population {
         return accum;
     }
 
+    public double avgFitness(){
+        return sumFitness()/populationSize;
+    }
+
     public HashMap<Individual, Double> getRelativeFitnesses(){
         HashMap<Individual, Double> relativeFitnesses =  new HashMap<Individual, Double>();
-        double totalFitness = getSumFitness();
+        double totalFitness = sumFitness();
 
         for(Individual i : individuals){
             relativeFitnesses.put(i, (i.getFitness()/totalFitness));
