@@ -24,6 +24,9 @@ public abstract class Character implements Individual {
      */
     private final Equipment equipment;
 
+    private static Multipliers multipliersInstance;
+
+
 
     // ================================================
     // Instance variables that might be removed.    //|
@@ -104,6 +107,21 @@ public abstract class Character implements Individual {
 
 
     /**
+     * Creates the {@link Multipliers} instance to be used during all execution.
+     *
+     * @param strength    Multiplier for strength.
+     * @param agility     Multiplier for agility.
+     * @param proficiency Multiplier for proficiency.
+     * @param resistance  Multiplier for resistance.
+     * @param life        Multiplier for life.
+     */
+    public static void createMultipliersInstance(double strength, double agility, double proficiency,
+                                                 double resistance, double life) {
+        multipliersInstance = new Multipliers(strength, agility, proficiency, resistance, life);
+    }
+
+
+    /**
      * Builder for {@link Character}.
      */
     public abstract static class Builder<T extends Character> {
@@ -124,6 +142,13 @@ public abstract class Character implements Individual {
          */
         private Multipliers multipliers;
 
+
+        /**
+         * Constructor.
+         */
+        public Builder() {
+            this.multipliers = multipliersInstance; // If set, used that instance. Else, create one with the builder.
+        }
 
         /**
          * Creates a new {@link Equipment.Builder} instance for setting this builder's {@link Equipment}.
