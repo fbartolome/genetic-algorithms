@@ -2,6 +2,7 @@ package ar.edu.itba.genetic_algorithms.models.character;
 
 import ar.edu.itba.genetic_algorithms.algorithms.Chromosome;
 import ar.edu.itba.genetic_algorithms.algorithms.Individual;
+import ar.edu.itba.genetic_algorithms.algorithms.api.IndividualCreator;
 import ar.edu.itba.genetic_algorithms.models.item.*;
 
 import java.util.List;
@@ -19,6 +20,13 @@ public abstract class Character implements Individual {
 
 
     /**
+     * Holds a {@link Multipliers} instance to be used during all execution.
+     */
+    private static Multipliers multipliersInstance;
+
+
+
+    /**
      * The character's height.
      */
     private final double height;
@@ -27,9 +35,7 @@ public abstract class Character implements Individual {
      * The character's equipment.
      */
     private final Equipment equipment;
-
-    private static Multipliers multipliersInstance;
-
+    
 
 
     // ================================================
@@ -133,7 +139,7 @@ public abstract class Character implements Individual {
     /**
      * Builder for {@link Character}.
      */
-    public abstract static class Builder<T extends Character> {
+    public abstract static class Builder<T extends Character> implements IndividualCreator {
 
 
         /**
@@ -229,6 +235,19 @@ public abstract class Character implements Individual {
          * @return The built {@link Character}.
          */
         public abstract T build();
+
+        @Override
+        public Individual create(Chromosome chromosome) {
+            Object[] genes = chromosome.getGenes();
+            return this.height((double) genes[0])
+                    .equipment()
+                    .setArmor((Armor) genes[1])
+                    .setBoot((Boot) genes[2])
+                    .setGauntlet((Gauntlet) genes[3])
+                    .setHelmet((Helmet) genes[4])
+                    .setWeapon((Weapon) genes[5])
+                    .character().build(); // Multipliers are set in constructor.
+        }
 
 
         // =========================================================
