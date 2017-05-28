@@ -13,7 +13,7 @@ public class Elite implements SelectionMethod{
     public List<ChromosomePair> select(Population population) {
         List<Individual> individuals = population.getIndividuals();
         individuals.sort(
-                (Individual i1, Individual i2) -> (new Double(i1.getFitness()).compareTo(new Double(i2.getFitness()))));
+                (Individual i1, Individual i2) -> -(new Double(i1.getFitness()).compareTo(new Double(i2.getFitness()))));
 
         List<ChromosomePair> selectedIndividuals = new LinkedList<>();
         //TODO: make variable the number of selected chromosomes
