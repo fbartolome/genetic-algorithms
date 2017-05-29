@@ -1,11 +1,11 @@
 package ar.edu.itba.genetic_algorithms.algorithms.selection_methods;
 
-import ar.edu.itba.genetic_algorithms.algorithms.Chromosome;
-import ar.edu.itba.genetic_algorithms.algorithms.Population;
+import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
+import ar.edu.itba.genetic_algorithms.algorithms.engine.Population;
 
 import java.util.List;
 
-public interface SelectionMethod {
+public interface SelectionStrategy {
 
     /**
      * Selects the individuals for crossing.

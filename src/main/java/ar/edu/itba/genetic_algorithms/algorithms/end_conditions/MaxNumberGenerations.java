@@ -1,6 +1,6 @@
 package ar.edu.itba.genetic_algorithms.algorithms.end_conditions;
 
-import ar.edu.itba.genetic_algorithms.algorithms.Population;
+import ar.edu.itba.genetic_algorithms.algorithms.engine.Population;
 
 public class MaxNumberGenerations implements EndingCondition {
 

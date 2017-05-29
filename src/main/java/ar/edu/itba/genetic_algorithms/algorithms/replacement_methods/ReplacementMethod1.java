@@ -1,7 +1,7 @@
 package ar.edu.itba.genetic_algorithms.algorithms.replacement_methods;
 
-import ar.edu.itba.genetic_algorithms.algorithms.Individual;
-import ar.edu.itba.genetic_algorithms.algorithms.Population;
+import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
+import ar.edu.itba.genetic_algorithms.algorithms.engine.Population;
 
 import java.util.List;
 

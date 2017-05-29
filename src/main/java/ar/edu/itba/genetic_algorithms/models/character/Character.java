@@ -1,7 +1,7 @@
 package ar.edu.itba.genetic_algorithms.models.character;
 
-import ar.edu.itba.genetic_algorithms.algorithms.Chromosome;
-import ar.edu.itba.genetic_algorithms.algorithms.Individual;
+import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
+import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
 import ar.edu.itba.genetic_algorithms.algorithms.api.IndividualCreator;
 import ar.edu.itba.genetic_algorithms.models.item.*;
 

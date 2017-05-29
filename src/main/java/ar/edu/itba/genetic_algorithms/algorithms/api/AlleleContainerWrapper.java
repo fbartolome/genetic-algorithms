@@ -1,7 +1,5 @@
 package ar.edu.itba.genetic_algorithms.algorithms.api;
 
-import ar.edu.itba.genetic_algorithms.algorithms.Chromosome;
-
 /**
  * This interface defines a method for getting alleles based on the position of the gene
  * in a defined {@link Chromosome}.

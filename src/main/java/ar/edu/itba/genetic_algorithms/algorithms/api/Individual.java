@@ -1,4 +1,4 @@
-package ar.edu.itba.genetic_algorithms.algorithms;
+package ar.edu.itba.genetic_algorithms.algorithms.api;
 
 /**
  * Represents an individual (basic unit of a genetic algorithm).

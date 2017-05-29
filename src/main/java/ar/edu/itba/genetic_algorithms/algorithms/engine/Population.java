@@ -1,4 +1,6 @@
-package ar.edu.itba.genetic_algorithms.algorithms;
+package ar.edu.itba.genetic_algorithms.algorithms.engine;
+
+import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
 
 import java.util.*;
 

@@ -1,13 +1,13 @@
 package ar.edu.itba.genetic_algorithms.algorithms.selection_methods;
 
-import ar.edu.itba.genetic_algorithms.algorithms.Chromosome;
-import ar.edu.itba.genetic_algorithms.algorithms.Individual;
-import ar.edu.itba.genetic_algorithms.algorithms.Population;
+import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
+import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
+import ar.edu.itba.genetic_algorithms.algorithms.engine.Population;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TournamentDeterministic implements SelectionMethod {
+public class TournamentDeterministic implements SelectionStrategy {
 
     private int m = 3;
 

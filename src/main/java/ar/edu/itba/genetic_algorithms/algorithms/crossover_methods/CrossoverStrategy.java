@@ -1,8 +1,8 @@
 package ar.edu.itba.genetic_algorithms.algorithms.crossover_methods;
 
-import ar.edu.itba.genetic_algorithms.algorithms.ChromosomePair;
+import ar.edu.itba.genetic_algorithms.algorithms.engine.ChromosomePair;
 
-public interface CrossoverMethod {
+public interface CrossoverStrategy {
 
     /**
      * Crosses two chromosomes, generating two new ones.

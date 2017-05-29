@@ -1,13 +1,11 @@
 package ar.edu.itba.genetic_algorithms.algorithms.crossover_methods;
 
-import ar.edu.itba.genetic_algorithms.algorithms.Chromosome;
-import ar.edu.itba.genetic_algorithms.algorithms.Individual;
-import ar.edu.itba.genetic_algorithms.algorithms.ChromosomePair;
-import ar.edu.itba.genetic_algorithms.models.character.Archer;
+import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
+import ar.edu.itba.genetic_algorithms.algorithms.engine.ChromosomePair;
 
 import java.util.Random;
 
-public class OnePointCrossover implements CrossoverMethod {
+public class OnePointCrossover implements CrossoverStrategy {
 
     @Override
     public ChromosomePair crossover(ChromosomePair parents) {

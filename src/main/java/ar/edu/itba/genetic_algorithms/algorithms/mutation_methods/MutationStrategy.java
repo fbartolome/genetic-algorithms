@@ -1,8 +1,8 @@
 package ar.edu.itba.genetic_algorithms.algorithms.mutation_methods;
 
-import ar.edu.itba.genetic_algorithms.algorithms.Chromosome;
+import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
 
-public interface MutationMethod {
+public interface MutationStrategy {
 
     /**
      * Mutates a chromosome.
