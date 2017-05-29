@@ -2,11 +2,11 @@ package ar.edu.itba.genetic_algorithms.algorithms.engine;
 
 import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
-import ar.edu.itba.genetic_algorithms.algorithms.crossover_methods.CrossoverStrategy;
+import ar.edu.itba.genetic_algorithms.algorithms.crossover_strategies.CrossoverStrategy;
 import ar.edu.itba.genetic_algorithms.algorithms.end_conditions.EndingCondition;
-import ar.edu.itba.genetic_algorithms.algorithms.mutation_methods.MutationStrategy;
-import ar.edu.itba.genetic_algorithms.algorithms.replacement_methods.ReplacementMethod;
-import ar.edu.itba.genetic_algorithms.algorithms.selection_methods.SelectionStrategy;
+import ar.edu.itba.genetic_algorithms.algorithms.mutation_strategies.MutationStrategy;
+import ar.edu.itba.genetic_algorithms.algorithms.replacement_strategies.ReplacementMethod;
+import ar.edu.itba.genetic_algorithms.algorithms.selection_strategies.SelectionStrategy;
 import ar.edu.itba.genetic_algorithms.models.character.Archer;
 
 import java.util.LinkedList;

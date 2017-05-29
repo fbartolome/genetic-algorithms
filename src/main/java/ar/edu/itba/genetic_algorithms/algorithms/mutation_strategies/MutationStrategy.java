@@ -1,4 +1,4 @@
-package ar.edu.itba.genetic_algorithms.algorithms.mutation_methods;
+package ar.edu.itba.genetic_algorithms.algorithms.mutation_strategies;
 
 import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
 

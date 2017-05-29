@@ -1,4 +1,4 @@
-package ar.edu.itba.genetic_algorithms.algorithms.selection_methods;
+package ar.edu.itba.genetic_algorithms.algorithms.selection_strategies;
 
 import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;

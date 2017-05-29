@@ -1,4 +1,4 @@
-package ar.edu.itba.genetic_algorithms.algorithms.selection_methods;
+package ar.edu.itba.genetic_algorithms.algorithms.selection_strategies;
 
 import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
@@ -8,7 +8,6 @@ import ar.edu.itba.genetic_algorithms.algorithms.engine.Population;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
 
 
 ///TODO!!!! https://doc.lagout.org/science/0_Computer%20Science/2_Algorithms/Practical%20Handbook%20of%20GENETIC%20ALGORITHMS%2C%20Volume%20II/ganf5.pdf

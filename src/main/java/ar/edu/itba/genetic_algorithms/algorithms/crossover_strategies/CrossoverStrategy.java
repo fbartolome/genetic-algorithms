@@ -1,4 +1,4 @@
-package ar.edu.itba.genetic_algorithms.algorithms.crossover_methods;
+package ar.edu.itba.genetic_algorithms.algorithms.crossover_strategies;
 
 import ar.edu.itba.genetic_algorithms.algorithms.engine.ChromosomePair;
 

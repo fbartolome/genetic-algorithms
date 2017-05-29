@@ -1,4 +1,4 @@
-package ar.edu.itba.genetic_algorithms.algorithms.replacement_methods;
+package ar.edu.itba.genetic_algorithms.algorithms.replacement_strategies;
 
 import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
 import ar.edu.itba.genetic_algorithms.algorithms.engine.Population;
