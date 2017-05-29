@@ -2,6 +2,7 @@ package ar.edu.itba.genetic_algorithms.algorithms;
 
 import ar.edu.itba.genetic_algorithms.algorithms.crossover_methods.CrossoverMethod;
 import ar.edu.itba.genetic_algorithms.algorithms.end_conditions.EndingCondition;
+import ar.edu.itba.genetic_algorithms.algorithms.mutation_methods.MutationMethod;
 import ar.edu.itba.genetic_algorithms.algorithms.replacement_methods.ReplacementMethod;
 import ar.edu.itba.genetic_algorithms.algorithms.selection_methods.SelectionMethod;
 import ar.edu.itba.genetic_algorithms.models.character.Archer;
@@ -21,14 +22,20 @@ public class GeneticAlgorithm {
 
     private final CrossoverMethod crossoverMethod;
 
+    private final MutationMethod mutationMethod;
+
+    private final double pm;
+
     private final ReplacementMethod replacementMethod;
 
-    public GeneticAlgorithm(Population initialPopulation, EndingCondition endingCondition, SelectionMethod selectionMethod, int k, CrossoverMethod crossoverMethod, ReplacementMethod replacementMethod){
+    public GeneticAlgorithm(Population initialPopulation, EndingCondition endingCondition, SelectionMethod selectionMethod, int k, CrossoverMethod crossoverMethod, MutationMethod mutationMethod, double pm, ReplacementMethod replacementMethod){
         this.population = initialPopulation;
         this.endingCondition = endingCondition;
         this.selectionMethod = selectionMethod;
         this.k = k;
         this.crossoverMethod = crossoverMethod;
+        this.mutationMethod = mutationMethod;
+        this.pm = pm;
         this.replacementMethod = replacementMethod;
     }
 
