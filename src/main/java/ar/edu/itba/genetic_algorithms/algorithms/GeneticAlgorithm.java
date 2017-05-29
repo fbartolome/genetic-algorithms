@@ -38,10 +38,14 @@ public class GeneticAlgorithm {
 
             System.out.println("Generation " + population.getGeneration() + "\n\tAverage fitness: " + population.avgFitness());
 
-            List<ChromosomePair> selectedChromosomes = selectionMethod.select(population, k);
+            List<Chromosome> selectedChromosomes = selectionMethod.select(population, k);
+            List<ChromosomePair> selectedChromosomePairs = new LinkedList<>();
+            for(int i = 0; i < selectedChromosomes.size(); i += 2){
+                selectedChromosomePairs.add(new ChromosomePair(selectedChromosomes.get(i), selectedChromosomes.get(i+1)));
+            }
 
             List<Chromosome> offspringChromosomes = new LinkedList<>();
-            for(ChromosomePair pair : selectedChromosomes){
+            for(ChromosomePair pair : selectedChromosomePairs){
                 ChromosomePair offsprings = crossoverMethod.crossover(pair);
                 offspringChromosomes.add(offsprings.getFirst());
                 offspringChromosomes.add(offsprings.getSecond());

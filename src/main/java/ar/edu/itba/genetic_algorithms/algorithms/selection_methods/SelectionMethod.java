@@ -8,11 +8,11 @@ import java.util.List;
 public interface SelectionMethod {
 
     /**
-     * Selects the pairs of individuals for crossing.
+     * Selects the individuals for crossing.
      *
      * @param population actual population in the genetic algorithm.
      * @param k number of selected parents.
-     * @return pairs of individuals for crossing.
+     * @return individuals for crossing.
      */
     List<Chromosome> select(Population population, int k);
 
