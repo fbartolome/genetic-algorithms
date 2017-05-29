@@ -1,6 +1,6 @@
 package ar.edu.itba.genetic_algorithms.algorithms.selection_methods;
 
-import ar.edu.itba.genetic_algorithms.algorithms.ChromosomePair;
+import ar.edu.itba.genetic_algorithms.algorithms.Chromosome;
 import ar.edu.itba.genetic_algorithms.algorithms.Population;
 
 import java.util.List;
@@ -14,6 +14,6 @@ public interface SelectionMethod {
      * @param k number of selected parents.
      * @return pairs of individuals for crossing.
      */
-    List<ChromosomePair> select(Population population, int k);
+    List<Chromosome> select(Population population, int k);
 
 }
