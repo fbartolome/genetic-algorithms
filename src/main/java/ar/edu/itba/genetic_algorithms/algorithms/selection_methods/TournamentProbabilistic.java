@@ -9,7 +9,6 @@ import java.util.List;
 
 public class TournamentProbabilistic implements SelectionMethod {
 
-
     @Override
     public List<Chromosome> select(Population population, int k) {
 

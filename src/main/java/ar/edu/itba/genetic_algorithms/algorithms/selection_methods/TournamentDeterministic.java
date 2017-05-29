@@ -11,6 +11,10 @@ public class TournamentDeterministic implements SelectionMethod {
 
     private int m = 3;
 
+    public TournamentDeterministic(int m) {
+        this.m = m;
+    }
+
     @Override
     public List<Chromosome> select(Population population, int k) {
 

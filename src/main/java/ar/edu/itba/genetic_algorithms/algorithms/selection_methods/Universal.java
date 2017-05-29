@@ -7,13 +7,15 @@ import ar.edu.itba.genetic_algorithms.algorithms.Population;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 //TODO: probar
 public class Universal extends AccumulatedSelectionMethod {
 
-    //todo: parametrizar y probar
     private double j = 0.4;
+
+    public Universal(double j) {
+        this.j = j;
+    }
 
     @Override
     public List<Chromosome> select(Population population, int k) {
