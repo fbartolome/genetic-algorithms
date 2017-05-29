@@ -50,7 +50,7 @@ public class GeneticAlgorithmEngine {
         this.alleleContainerWrapper = alleleContainerWrapper;
     }
 
-    public void evolve() {
+    public Population evolve() {
 
 
         while (!endingCondition.isSatisfied(population)) {
@@ -79,7 +79,7 @@ public class GeneticAlgorithmEngine {
         }
 
         System.out.println("Generation " + population.getGeneration() + "\n\tAverage fitness: " + population.avgFitness());
-
+        return population;
     }
 
     private List<Individual> chromosomesToIndividuals(List<Chromosome> chromosomes) {
