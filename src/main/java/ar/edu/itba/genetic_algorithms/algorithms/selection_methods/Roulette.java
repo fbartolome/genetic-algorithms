@@ -8,7 +8,7 @@ import java.util.List;
 public class Roulette implements SelectionMethod {
 
     @Override
-    public List<ChromosomePair> select(Population population) {
+    public List<ChromosomePair> select(Population population, int k) {
         return null;
     }
 

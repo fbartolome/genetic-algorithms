@@ -17,14 +17,17 @@ public class GeneticAlgorithm {
 
     private final SelectionMethod selectionMethod;
 
+    private final int k;
+
     private final CrossoverMethod crossoverMethod;
 
     private final ReplacementMethod replacementMethod;
 
-    public GeneticAlgorithm(Population initialPopulation, EndingCondition endingCondition, SelectionMethod selectionMethod, CrossoverMethod crossoverMethod, ReplacementMethod replacementMethod){
+    public GeneticAlgorithm(Population initialPopulation, EndingCondition endingCondition, SelectionMethod selectionMethod, int k, CrossoverMethod crossoverMethod, ReplacementMethod replacementMethod){
         this.population = initialPopulation;
         this.endingCondition = endingCondition;
         this.selectionMethod = selectionMethod;
+        this.k = k;
         this.crossoverMethod = crossoverMethod;
         this.replacementMethod = replacementMethod;
     }

@@ -10,6 +10,6 @@ public interface MutationMethod {
      * @param originalChromosome the original chromosome for mutation.
      * @return mutated chromosome.
      */
-    Chromosome mutate(Chromosome originalChromosome);   
+    Chromosome mutate(Chromosome originalChromosome);
 
 }

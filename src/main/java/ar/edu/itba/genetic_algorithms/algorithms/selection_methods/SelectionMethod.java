@@ -11,8 +11,9 @@ public interface SelectionMethod {
      * Selects the pairs of individuals for crossing.
      *
      * @param population actual population in the genetic algorithm.
+     * @param k number of selected parents.
      * @return pairs of individuals for crossing.
      */
-    List<ChromosomePair> select(Population population);
+    List<ChromosomePair> select(Population population, int k);
 
 }

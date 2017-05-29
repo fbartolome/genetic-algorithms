@@ -10,7 +10,7 @@ import java.util.List;
 public class Elite implements SelectionMethod{
 
     @Override
-    public List<ChromosomePair> select(Population population) {
+    public List<ChromosomePair> select(Population population, int k) {
         List<Individual> individuals = population.getIndividuals();
         individuals.sort(
                 (Individual i1, Individual i2) -> -(new Double(i1.getFitness()).compareTo(new Double(i2.getFitness()))));
