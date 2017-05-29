@@ -38,7 +38,7 @@ public class GeneticAlgorithm {
 
             System.out.println("Generation " + population.getGeneration() + "\n\tAverage fitness: " + population.avgFitness());
 
-            List<ChromosomePair> selectedChromosomes = selectionMethod.select(population);
+            List<ChromosomePair> selectedChromosomes = selectionMethod.select(population, k);
 
             List<Chromosome> offspringChromosomes = new LinkedList<>();
             for(ChromosomePair pair : selectedChromosomes){
