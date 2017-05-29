@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//TODO probar
 public class Roulette implements SelectionMethod {
 
     public List<Chromosome> select(Population population, int k){
