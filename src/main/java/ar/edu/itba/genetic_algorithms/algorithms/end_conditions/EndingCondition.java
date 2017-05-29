@@ -10,6 +10,6 @@ public interface EndingCondition {
      * @param population actual population in the genetic algorithm.
      * @return true if the condition is satisfied, false otherwise.
      */
-    boolean isSatified(Population population);
+    boolean isSatisfied(Population population);
 
 }

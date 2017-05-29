@@ -41,7 +41,7 @@ public class GeneticAlgorithm {
 
     public void evolve(){
 
-        while(!endingCondition.isSatified(population)){
+        while(!endingCondition.isSatisfied(population)){
 
             System.out.println("Generation " + population.getGeneration() + "\n\tAverage fitness: " + population.avgFitness());
 
@@ -63,7 +63,7 @@ public class GeneticAlgorithm {
             List<Individual> offspringIndividuals = chromosomesToIndividuals(offspringChromosomes);
             List<Individual> newIndividuals = replacementMethod.replace(population, offspringIndividuals);
 
-            population = new Population(newIndividuals, population.getGeneration() + 1);
+            population = new Population(newIndividuals, population);
         }
 
         System.out.println("Generation " + population.getGeneration() + "\n\tAverage fitness: " + population.avgFitness());

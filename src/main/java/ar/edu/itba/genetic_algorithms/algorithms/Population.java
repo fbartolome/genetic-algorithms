@@ -12,6 +12,11 @@ public class Population {
     private List<Individual> individuals;
 
     /**
+     * Previous generation.
+     */
+    private Population previousPopulation;
+
+    /**
      * Number of population's generation.
      */
     private final int generation;
@@ -21,9 +26,14 @@ public class Population {
      */
     private final int populationSize;
 
-    public Population(List<Individual> individuals, int generation){
+    public Population(List<Individual> individuals, Population previousPopulation){
         this.individuals = individuals;
-        this.generation = generation;
+        this.previousPopulation = previousPopulation;
+        if(previousPopulation == null){
+            this.generation = 1;
+        } else {
+            this.generation = previousPopulation.getGeneration() + 1;
+        }
         this.populationSize = individuals.size();
     }
 
@@ -59,6 +69,20 @@ public class Population {
             accum += e.getValue();
         }
         return accumulatedRelativeFitnesses;
+    }
+
+    public Individual bestIndividual(){
+        //TODO: change if list structure changes.
+        Individual best = null;
+        for(Individual individual : individuals){
+            if(best == null || best.getFitness() < individual.getFitness())
+                best = individual;
+        }
+        return best;
+    }
+
+    public Population getPreviousPopulation() {
+        return previousPopulation;
     }
 
     public List<Individual> getIndividuals() {

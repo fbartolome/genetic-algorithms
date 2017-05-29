@@ -11,7 +11,7 @@ public class MaxNumberGenerations implements EndingCondition {
     }
 
     @Override
-    public boolean isSatified(Population population) {
+    public boolean isSatisfied(Population population) {
         return population.getGeneration() >= maxGenerations;
     }
 }
