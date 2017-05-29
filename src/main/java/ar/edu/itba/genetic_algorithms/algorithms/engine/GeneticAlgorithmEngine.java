@@ -1,5 +1,7 @@
 package ar.edu.itba.genetic_algorithms.algorithms.engine;
 
+import ar.edu.itba.genetic_algorithms.algorithms.api.AlleleContainer;
+import ar.edu.itba.genetic_algorithms.algorithms.api.AlleleContainerWrapper;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
 import ar.edu.itba.genetic_algorithms.algorithms.crossover_strategies.CrossoverStrategy;
@@ -11,6 +13,7 @@ import ar.edu.itba.genetic_algorithms.models.character.Archer;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class GeneticAlgorithmEngine {
 
@@ -30,10 +33,12 @@ public class GeneticAlgorithmEngine {
 
     private final ReplacementMethod replacementMethod;
 
+    private final AlleleContainerWrapper alleleContainerWrapper;
+
     public GeneticAlgorithmEngine(Population initialPopulation, EndingCondition endingCondition,
                                   SelectionStrategy selectionStrategy, int k,
                                   CrossoverStrategy crossoverStrategy, MutationStrategy mutationStrategy,
-                                  double pm, ReplacementMethod replacementMethod) {
+                                  double pm, ReplacementMethod replacementMethod, AlleleContainerWrapper alleleContainerWrapper) {
         this.population = initialPopulation;
         this.endingCondition = endingCondition;
         this.selectionStrategy = selectionStrategy;
@@ -42,6 +47,7 @@ public class GeneticAlgorithmEngine {
         this.mutationStrategy = mutationStrategy;
         this.pm = pm;
         this.replacementMethod = replacementMethod;
+        this.alleleContainerWrapper = alleleContainerWrapper;
     }
 
     public void evolve() {
@@ -52,19 +58,19 @@ public class GeneticAlgorithmEngine {
             System.out.println("Generation " + population.getGeneration() + "\n\tAverage fitness: " + population.avgFitness());
 
             List<Chromosome> selectedChromosomes = selectionStrategy.select(population, k);
-            List<ChromosomePair> selectedChromosomePairs = new LinkedList<>();
-            for (int i = 0; i < selectedChromosomes.size(); i += 2) {
-                selectedChromosomePairs.add(new ChromosomePair(selectedChromosomes.get(i), selectedChromosomes.get(i + 1)));
-            }
 
             List<Chromosome> offspringChromosomes = new LinkedList<>();
-            for (ChromosomePair pair : selectedChromosomePairs) {
-                ChromosomePair offspring = crossoverStrategy.crossover(pair);
+            for (int i = 0; i < selectedChromosomes.size(); i += 2) {
+                ChromosomePair offspring = crossoverStrategy.crossover(new ChromosomePair(selectedChromosomes.get(i), selectedChromosomes.get(i + 1)));
                 offspringChromosomes.add(offspring.getFirst());
                 offspringChromosomes.add(offspring.getSecond());
             }
 
-            //TODO: mutation
+            for(Chromosome chromosome : offspringChromosomes){
+                if(Math.random() < pm){
+                    mutationStrategy.mutate(chromosome, alleleContainerWrapper);
+                }
+            }
 
             List<Individual> offspringIndividuals = chromosomesToIndividuals(offspringChromosomes);
             List<Individual> newIndividuals = replacementMethod.replace(population, offspringIndividuals);

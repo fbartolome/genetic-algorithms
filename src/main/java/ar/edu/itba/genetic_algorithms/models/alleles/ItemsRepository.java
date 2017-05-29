@@ -54,6 +54,6 @@ public class ItemsRepository implements AlleleContainer {
 
     @Override
     public Object getAllele(Random random) {
-        return random.nextInt(items.size());
+        return getItem(random.nextInt(items.size()));
     }
 }
