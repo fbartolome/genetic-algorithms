@@ -7,32 +7,24 @@ import ar.edu.itba.genetic_algorithms.algorithms.Population;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 //TODO probar
-public class Roulette implements SelectionMethod {
+public class Roulette extends AccumulatedSelectionMethod{
 
     public List<Chromosome> select(Population population, int k){
-        List<Double> rand = new ArrayList<Double>();
+        List<Double> rand = new ArrayList<>();
         for(int i = 0; i<k; i++){
             rand.add(i, Math.random());
         }
         HashMap<Individual, Double> populationRelativeFitnesses = population.getAccumulatedRelativeFitnesses();
-        List<Chromosome> selectedChromosomes = new ArrayList<Chromosome>();
+        List<Chromosome> selectedChromosomes = new ArrayList<>();
 
         for(Double d : rand){
-            selectedChromosomes.add(selectChromosome(d, populationRelativeFitnesses));
+            selectedChromosomes.add(selectChromosomeOnAccumulatedFitnessProbability(d, populationRelativeFitnesses));
         }
         return selectedChromosomes;
     }
 
-    private Chromosome selectChromosome(Double rand, HashMap<Individual, Double> individualList){
-        for(Map.Entry<Individual, Double> e : individualList.entrySet()){
-            if(e.getValue() > rand){
-                return e.getKey().getChromosome();
-            }
-        }
-        return null;
-    }
+
 
 }

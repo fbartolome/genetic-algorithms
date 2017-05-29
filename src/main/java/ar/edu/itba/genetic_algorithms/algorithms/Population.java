@@ -1,8 +1,6 @@
 package ar.edu.itba.genetic_algorithms.algorithms;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Population {
 
@@ -87,6 +85,23 @@ public class Population {
 
     public List<Individual> getIndividuals() {
         return individuals;
+    }
+
+    public List<Individual> getSortedIndividualsFromWorstToBest(){
+        //TODO: checkear si lo estoy ordenando bien
+        List<Individual> sortedIndividuals = new ArrayList<>(individuals);
+        sortedIndividuals.sort(
+                (Individual i1, Individual i2) -> (new Double(i1.getFitness()).compareTo(new Double(i2.getFitness()))));
+
+        System.out.println("sorted individuals " + sortedIndividuals);
+        return sortedIndividuals;
+    }
+
+    public List<Individual> getSortedIndividualsFromBestToWorst(){
+        List<Individual> sortedIndividuals = new ArrayList<>(individuals);
+        sortedIndividuals.sort(
+                (Individual i1, Individual i2) -> -(new Double(i1.getFitness()).compareTo(new Double(i2.getFitness()))));
+        return sortedIndividuals;
     }
 
     public int getGeneration() {

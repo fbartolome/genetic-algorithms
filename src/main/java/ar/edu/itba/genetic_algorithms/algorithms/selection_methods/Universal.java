@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 //TODO: probar
-public class Universal implements SelectionMethod {
+public class Universal extends AccumulatedSelectionMethod {
 
     //todo: parametrizar y probar
     private double j = 0.4;
@@ -25,17 +25,10 @@ public class Universal implements SelectionMethod {
         HashMap<Individual, Double> populationRelativeFitnesses = population.getAccumulatedRelativeFitnesses();
         List<Chromosome> selectedChromosomes = new ArrayList<>();
         for(Double d : randj){
-            selectedChromosomes.add(selectChromosome(d, populationRelativeFitnesses));
+            selectedChromosomes.add(selectChromosomeOnAccumulatedFitnessProbability(d, populationRelativeFitnesses));
         }
         return selectedChromosomes;
     }
 
-    private Chromosome selectChromosome(Double rand, HashMap<Individual, Double> individualList){
-        for(Map.Entry<Individual, Double> e : individualList.entrySet()){
-            if(e.getValue() > rand){
-                return e.getKey().getChromosome();
-            }
-        }
-        return null;
-    }
+
 }

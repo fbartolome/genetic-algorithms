@@ -11,15 +11,11 @@ public class Elite implements SelectionMethod{
 
     @Override
     public List<Chromosome> select(Population population, int k) {
-        List<Individual> individuals = population.getIndividuals();
-        individuals.sort(
-                (Individual i1, Individual i2) -> -(new Double(i1.getFitness()).compareTo(new Double(i2.getFitness()))));
-
+        List<Individual> individuals = population.getSortedIndividualsFromBestToWorst();
         List<Chromosome> selectedChromosomes = new ArrayList<>();
         for(int i = 0; i < k; i++){
             selectedChromosomes.add(individuals.get(i).getChromosome());
         }
-
         return selectedChromosomes;
     }
 
