@@ -1,14 +1,16 @@
-package ar.edu.itba.genetic_algorithms.main.repositories;
+package ar.edu.itba.genetic_algorithms.models.alleles;
 
+import ar.edu.itba.genetic_algorithms.algorithms.api.AlleleContainer;
 import ar.edu.itba.genetic_algorithms.models.item.Item;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Represents an item's repository.
  */
-public class ItemsRepository {
+public class ItemsRepository implements AlleleContainer {
 
     /**
      * Stores the items.
@@ -45,4 +47,13 @@ public class ItemsRepository {
     }
 
 
+    @Override
+    public Object getAllele() {
+        return getAllele(new Random());
+    }
+
+    @Override
+    public Object getAllele(Random random) {
+        return random.nextInt(items.size());
+    }
 }

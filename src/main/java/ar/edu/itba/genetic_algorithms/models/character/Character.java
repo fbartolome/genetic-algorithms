@@ -24,6 +24,15 @@ public abstract class Character implements Individual {
      */
     private static Multipliers multipliersInstance;
 
+    /**
+     * Min. height for a character.
+     */
+    public static double MIN_HEIGHT = 1.3;
+
+    /**
+     * Max. height for a character.
+     */
+    public static double MAX_HEIGHT = 2.0;
 
 
     /**
@@ -35,7 +44,6 @@ public abstract class Character implements Individual {
      * The character's equipment.
      */
     private final Equipment equipment;
-    
 
 
     // ================================================
@@ -69,7 +77,7 @@ public abstract class Character implements Individual {
      * @param multipliers The character's multipliers for the items' stats.
      */
     protected Character(double height, Equipment equipment, Multipliers multipliers) {
-        if (!(height >= 1.3 && height <= 2.0) || equipment == null || multipliers == null) {
+        if (!(height >= MIN_HEIGHT && height <= MAX_HEIGHT) || equipment == null || multipliers == null) {
             throw new IllegalArgumentException("Wrong parameters.");
         }
         this.height = height;
