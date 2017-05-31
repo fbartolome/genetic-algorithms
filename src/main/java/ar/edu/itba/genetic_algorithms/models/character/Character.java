@@ -58,6 +58,28 @@ public abstract class Character implements Individual {
     // ================================================
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Character character = (Character) o;
+
+        return Double.compare(character.height, height) == 0
+                && (equipment != null ? equipment.equals(character.equipment) : character.equipment == null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(height);
+        result = (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (equipment != null ? equipment.hashCode() : 0);
+        return result;
+    }
+
     /**
      * The character's attack.
      */
