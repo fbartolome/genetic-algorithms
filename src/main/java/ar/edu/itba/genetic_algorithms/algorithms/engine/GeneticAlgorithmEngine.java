@@ -1,19 +1,17 @@
 package ar.edu.itba.genetic_algorithms.algorithms.engine;
 
-import ar.edu.itba.genetic_algorithms.algorithms.api.AlleleContainer;
 import ar.edu.itba.genetic_algorithms.algorithms.api.AlleleContainerWrapper;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
 import ar.edu.itba.genetic_algorithms.algorithms.crossover_strategies.CrossoverStrategy;
 import ar.edu.itba.genetic_algorithms.algorithms.end_conditions.EndingCondition;
 import ar.edu.itba.genetic_algorithms.algorithms.mutation_strategies.MutationStrategy;
-import ar.edu.itba.genetic_algorithms.algorithms.replacement_strategies.ReplacementMethod;
+import ar.edu.itba.genetic_algorithms.algorithms.replacement_strategies.ReplacementStrategy;
 import ar.edu.itba.genetic_algorithms.algorithms.selection_strategies.SelectionStrategy;
 import ar.edu.itba.genetic_algorithms.models.character.Archer;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 public class GeneticAlgorithmEngine {
 
@@ -31,14 +29,14 @@ public class GeneticAlgorithmEngine {
 
     private final double pm;
 
-    private final ReplacementMethod replacementMethod;
+    private final ReplacementStrategy replacementStrategy;
 
     private final AlleleContainerWrapper alleleContainerWrapper;
 
     public GeneticAlgorithmEngine(Population initialPopulation, EndingCondition endingCondition,
                                   SelectionStrategy selectionStrategy, int k,
                                   CrossoverStrategy crossoverStrategy, MutationStrategy mutationStrategy,
-                                  double pm, ReplacementMethod replacementMethod, AlleleContainerWrapper alleleContainerWrapper) {
+                                  double pm, ReplacementStrategy replacementStrategy, AlleleContainerWrapper alleleContainerWrapper) {
         this.population = initialPopulation;
         this.endingCondition = endingCondition;
         this.selectionStrategy = selectionStrategy;
@@ -46,7 +44,7 @@ public class GeneticAlgorithmEngine {
         this.crossoverStrategy = crossoverStrategy;
         this.mutationStrategy = mutationStrategy;
         this.pm = pm;
-        this.replacementMethod = replacementMethod;
+        this.replacementStrategy = replacementStrategy;
         this.alleleContainerWrapper = alleleContainerWrapper;
     }
 
@@ -66,16 +64,17 @@ public class GeneticAlgorithmEngine {
                 offspringChromosomes.add(offspring.getSecond());
             }
 
-            for(Chromosome chromosome : offspringChromosomes){
-                if(Math.random() < pm){
+            for (Chromosome chromosome : offspringChromosomes) {
+                if (Math.random() < pm) {
                     mutationStrategy.mutate(chromosome, alleleContainerWrapper);
                 }
             }
 
             List<Individual> offspringIndividuals = chromosomesToIndividuals(offspringChromosomes);
-            List<Individual> newIndividuals = replacementMethod.replace(population, offspringIndividuals);
-
-            population = new Population(newIndividuals, population);
+//            List<Individual> newIndividuals = replacementStrategy.replace(population, offspringIndividuals);
+//
+//            population = new Population(newIndividuals, population);
+            population = replacementStrategy.replace(population, offspringIndividuals);
         }
 
         System.out.println("Generation " + population.getGeneration() + "\n\tAverage fitness: " + population.avgFitness());
