@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Boltzmann extends AccumulatedSelectionMethod {
 
-    private double n = 0.4;
+    private double n = 0.9;
 
     public Boltzmann(double n) {
         this.n = n;
@@ -52,7 +52,7 @@ public class Boltzmann extends AccumulatedSelectionMethod {
     }
 
     private double T(int generation) {
-        return (1 / n * generation) + 0.01;
+        return (1 / (n * generation)) + 0.1;
     }
 }
 

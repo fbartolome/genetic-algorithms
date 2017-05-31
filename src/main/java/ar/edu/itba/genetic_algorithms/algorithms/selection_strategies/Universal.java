@@ -17,6 +17,9 @@ public class Universal extends AccumulatedSelectionMethod {
         this.j = j;
     }
 
+    public Universal() {
+    }
+
     @Override
     public List<Chromosome> select(Population population, int k) {
         List<Double> randj = new ArrayList<>();

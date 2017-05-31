@@ -16,10 +16,11 @@ public class Ranking extends AccumulatedSelectionMethod {
 
         List<Individual> individuals = population.getSortedIndividualsFromWorstToBest();
         HashMap<Individual, Double> accumProbabilities = new HashMap<>();
+        int sum = sumation(individuals.size());
         double prevValue = 0;
         for (int i = 0; i < individuals.size(); i++) {
-            accumProbabilities.put(individuals.get(i), prevValue + ((double) i / individuals.size()));
-            prevValue = (double) i / individuals.size();
+            prevValue =  prevValue + ((double)(i+1) / sum);
+            accumProbabilities.put(individuals.get(i), prevValue);
         }
 
         List<Chromosome> selectedChromosomes = new ArrayList<>();
@@ -28,9 +29,19 @@ public class Ranking extends AccumulatedSelectionMethod {
             double rand = Math.random();
             selectedChromosomes.add(selectChromosomeOnAccumulatedFitnessProbability(rand, accumProbabilities));
         }
+
         return selectedChromosomes;
     }
 
+
+    private int sumation(int num){
+        int accum = 0;
+        for(int i=1; i<=num; i++){
+            accum+=i;
+        }
+        return accum;
+
+    }
 
 }
 

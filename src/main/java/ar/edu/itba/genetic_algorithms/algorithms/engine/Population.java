@@ -94,8 +94,6 @@ public class Population {
         List<Individual> sortedIndividuals = new ArrayList<>(individuals);
         sortedIndividuals.sort(
                 (Individual i1, Individual i2) -> (new Double(i1.getFitness()).compareTo(new Double(i2.getFitness()))));
-
-        System.out.println("sorted individuals " + sortedIndividuals);
         return sortedIndividuals;
     }
 
