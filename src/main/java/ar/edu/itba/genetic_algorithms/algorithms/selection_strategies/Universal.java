@@ -15,17 +15,13 @@ public class Universal extends AccumulatedSelectionMethod {
     public List<Chromosome> select(Population population, int k) {
         List<Double> randj = new ArrayList<>();
 
-        for(int j = 1; j<=k; j++){
-
-            double rj =  (Math.random() + j - 1)/k;
+        for (int j = 1; j <= k; j++) {
+            double rj = (Math.random() + j - 1) / k;
             randj.add(rj);
-          //  System.out.println(rj);
-
         }
-
         Multimap<Individual, Double> populationRelativeFitnesses = population.getAccumulatedRelativeFitnesses();
         List<Chromosome> selectedChromosomes = new ArrayList<>();
-        for(Double d : randj){
+        for (Double d : randj) {
             selectedChromosomes.add(selectChromosomeOnAccumulatedFitnessProbability(d, populationRelativeFitnesses));
         }
         return selectedChromosomes;

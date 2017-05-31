@@ -13,23 +13,24 @@ public class TournamentProbabilistic implements SelectionStrategy {
     public List<Chromosome> select(Population population, int k) {
 
         List<Chromosome> selectedChromosomes = new ArrayList<>();
-        for(int i=0; i<k; i++){
-            Individual i1 = population.getIndividuals().get((int) (Math.random() * population.getPopulationSize()));
-            Individual i2 = population.getIndividuals().get((int) (Math.random() * population.getPopulationSize()));
+        for (int i = 0; i < k; i++) {
+            List<Individual> individuals = population.getIndividuals();
+            Individual i1 = individuals.get((int) (Math.random() * population.getPopulationSize()));
+            Individual i2 = individuals.get((int) (Math.random() * population.getPopulationSize()));
             double r = Math.random();
 
             //add the most suitable chromosome
-            if(r < 0.75){
-                if(i1.getFitness() > i2.getFitness()){
+            if (r < 0.75) {
+                if (i1.getFitness() > i2.getFitness()) {
                     selectedChromosomes.add(i1.getChromosome());
-                }else{
+                } else {
                     selectedChromosomes.add(i2.getChromosome());
                 }
-            //add the least suitable chromosome
-            }else{
-                if(i1.getFitness() > i2.getFitness()){
+                //add the least suitable chromosome
+            } else {
+                if (i1.getFitness() > i2.getFitness()) {
                     selectedChromosomes.add(i2.getChromosome());
-                }else{
+                } else {
                     selectedChromosomes.add(i1.getChromosome());
                 }
             }

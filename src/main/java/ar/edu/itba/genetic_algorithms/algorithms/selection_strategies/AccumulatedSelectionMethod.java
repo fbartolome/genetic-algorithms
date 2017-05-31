@@ -8,16 +8,13 @@ import java.util.Map;
 
 public abstract class AccumulatedSelectionMethod implements SelectionStrategy {
 
-    protected Chromosome selectChromosomeOnAccumulatedFitnessProbability(Double rand, Multimap<Individual, Double> individualList) {
-       // System.out.println("-----");
+    protected Chromosome selectChromosomeOnAccumulatedFitnessProbability(Double rand,
+                                                                         Multimap<Individual, Double> individualList) {
         for (Map.Entry<Individual, Double> e : individualList.entries()) {
             if (e.getValue() > rand) {
                 return e.getKey().getChromosome();
-
             }
-         //   System.out.println(e.getValue());
         }
-      // System.out.println(rand + " ROMPE");
         return null;
     }
 }
