@@ -6,10 +6,10 @@ import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
 public interface MutationStrategy {
 
     /**
-     * Mutates a chromosome.
+     * Mutates a {@link Chromosome}.
      *
-     * @param originalChromosome the original chromosome for mutation.
-     * @param alleleContainerWrapper container of the possible alleles.
+     * @param originalChromosome     The original chromosome for mutation.
+     * @param alleleContainerWrapper The {@link AlleleContainerWrapper} with possible alleles.
      */
     void mutate(Chromosome originalChromosome, AlleleContainerWrapper alleleContainerWrapper);
 
