@@ -23,18 +23,24 @@
         <com.beust.jcommander.version>1.69</com.beust.jcommander.version>
         <com.google.guava.version>19.0</com.google.guava.version>
         <com.fasterxml.jackson.version>2.8.8</com.fasterxml.jackson.version>
+        <one.util.streamex.version>0.6.5</one.util.streamex.version>
         <org.springframework.version>4.2.5.RELEASE</org.springframework.version>
         <org.junit.version>4.12</org.junit.version>
     </properties>
 
 
     <dependencies>
-
         <!-- Google Guava Collections -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${com.google.guava.version}</version>
+        </dependency>
+        <!-- Enhancement of Java 8 Streams -->
+        <dependency>
+            <groupId>one.util</groupId>
+            <artifactId>streamex</artifactId>
+            <version>${one.util.streamex.version}</version>
         </dependency>
         <!-- JCommander for simplifying parameters initialization -->
         <dependency>
