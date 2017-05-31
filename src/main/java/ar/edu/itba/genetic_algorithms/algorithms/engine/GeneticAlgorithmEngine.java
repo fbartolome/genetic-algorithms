@@ -3,6 +3,7 @@ package ar.edu.itba.genetic_algorithms.algorithms.engine;
 import ar.edu.itba.genetic_algorithms.algorithms.api.AlleleContainerWrapper;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
+import ar.edu.itba.genetic_algorithms.algorithms.api.IndividualCreator;
 import ar.edu.itba.genetic_algorithms.algorithms.crossover_strategies.CrossoverStrategy;
 import ar.edu.itba.genetic_algorithms.algorithms.end_conditions.EndingCondition;
 import ar.edu.itba.genetic_algorithms.algorithms.mutation_strategies.MutationStrategy;
@@ -12,6 +13,7 @@ import ar.edu.itba.genetic_algorithms.models.character.Archer;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GeneticAlgorithmEngine {
 
@@ -33,10 +35,12 @@ public class GeneticAlgorithmEngine {
 
     private final AlleleContainerWrapper alleleContainerWrapper;
 
+    private final IndividualCreator individualCreator;
+
     public GeneticAlgorithmEngine(Population initialPopulation, EndingCondition endingCondition,
                                   SelectionStrategy selectionStrategy, int k,
                                   CrossoverStrategy crossoverStrategy, MutationStrategy mutationStrategy,
-                                  double pm, ReplacementStrategy replacementStrategy, AlleleContainerWrapper alleleContainerWrapper) {
+                                  double pm, ReplacementStrategy replacementStrategy, AlleleContainerWrapper alleleContainerWrapper, IndividualCreator individualCreator) {
         this.population = initialPopulation;
         this.endingCondition = endingCondition;
         this.selectionStrategy = selectionStrategy;
@@ -46,6 +50,7 @@ public class GeneticAlgorithmEngine {
         this.pm = pm;
         this.replacementStrategy = replacementStrategy;
         this.alleleContainerWrapper = alleleContainerWrapper;
+        this.individualCreator = individualCreator;
     }
 
     public Population evolve() {
@@ -70,25 +75,13 @@ public class GeneticAlgorithmEngine {
                 }
             }
 
-            List<Individual> offspringIndividuals = chromosomesToIndividuals(offspringChromosomes);
-//            List<Individual> newIndividuals = replacementStrategy.replace(population, offspringIndividuals);
-//
-//            population = new Population(newIndividuals, population);
+            List<Individual> offspringIndividuals = offspringChromosomes.stream().map(individualCreator::create).collect(Collectors.toList());
+
             population = replacementStrategy.replace(population, offspringIndividuals);
         }
 
         System.out.println("Generation " + population.getGeneration() + "\n\tAverage fitness: " + population.avgFitness());
         return population;
-    }
-
-    private List<Individual> chromosomesToIndividuals(List<Chromosome> chromosomes) {
-        List<Individual> individuals = new LinkedList<>();
-        for (Chromosome chromosome : chromosomes) {
-            //TODO: create individuals correctly
-            Individual individual = new Archer.Builder().create(chromosome);
-            individuals.add(individual);
-        }
-        return individuals;
     }
 
 

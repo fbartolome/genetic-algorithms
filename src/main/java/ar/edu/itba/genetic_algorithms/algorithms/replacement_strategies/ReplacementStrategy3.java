@@ -11,19 +11,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * This class represents the second replacement strategy, which consists of creating a new {@link Population}
- * replacing only a certain amount of {@link Individual}s
- * (those not replaced continue to exist in the new {@link Population}).
- */
-public class ReplacementStrategy2 implements ReplacementStrategy {
+public class ReplacementStrategy3 implements ReplacementStrategy {
 
     private final SelectionStrategy oldPopulationSelectionStrategy;
 
+    private final SelectionStrategy newPopulationSelectionStrategy;
+
     private final IndividualCreator individualCreator;
 
-    public ReplacementStrategy2(SelectionStrategy oldPopulationSelectionStrategy, IndividualCreator individualCreator){
+    public ReplacementStrategy3(SelectionStrategy oldPopulationSelectionStrategy, SelectionStrategy newPopulationSelectionStrategy, IndividualCreator individualCreator){
         this.oldPopulationSelectionStrategy = oldPopulationSelectionStrategy;
+        this.newPopulationSelectionStrategy = newPopulationSelectionStrategy;
         this.individualCreator = individualCreator;
     }
 
@@ -37,8 +35,13 @@ public class ReplacementStrategy2 implements ReplacementStrategy {
         int k = offspring.size();
         List<Individual> newIndividuals = oldPopulationSelectionStrategy.select(actualPopulation, actualPopulation.getPopulationSize() - k).
                 stream().map(individualCreator::create).collect(Collectors.toList());
-        newIndividuals.addAll(offspring);
+        List<Individual> auxIndividuals = actualPopulation.getIndividuals();
+        auxIndividuals.addAll(offspring);
+        Population auxPopulation = new Population(auxIndividuals, null);
+
+        newIndividuals.addAll(newPopulationSelectionStrategy.select(auxPopulation, k).stream()
+                .map(individualCreator::create).collect(Collectors.toList()));
+
         return new Population(newIndividuals, actualPopulation);
     }
-
 }
