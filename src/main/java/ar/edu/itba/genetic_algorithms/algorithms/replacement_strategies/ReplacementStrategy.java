@@ -5,6 +5,9 @@ import ar.edu.itba.genetic_algorithms.algorithms.engine.Population;
 
 import java.util.List;
 
+/**
+ * This interface defines a method for creating a new {@link Population}, replacing an old one.
+ */
 public interface ReplacementStrategy {
 
     /**
