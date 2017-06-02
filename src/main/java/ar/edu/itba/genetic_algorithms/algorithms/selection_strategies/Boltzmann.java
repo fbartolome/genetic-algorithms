@@ -3,11 +3,11 @@ package ar.edu.itba.genetic_algorithms.algorithms.selection_strategies;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
 import ar.edu.itba.genetic_algorithms.algorithms.engine.Population;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 
 public class Boltzmann extends AccumulatedSelectionMethod {
@@ -34,7 +34,7 @@ public class Boltzmann extends AccumulatedSelectionMethod {
         denominator /= population.getPopulationSize();
         double accum = 0;
         int index = 0;
-        HashMap<Individual, Double> accumulatedExpVal = new HashMap<>();
+        Multimap<Individual, Double> accumulatedExpVal = ArrayListMultimap.create();
 
         for (Individual i : population.getIndividuals()) {
             accumulatedExpVal.put(i, accum + numerators.get(index) / denominator);

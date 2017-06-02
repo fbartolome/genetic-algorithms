@@ -9,7 +9,6 @@ import ar.edu.itba.genetic_algorithms.algorithms.end_conditions.EndingCondition;
 import ar.edu.itba.genetic_algorithms.algorithms.mutation_strategies.MutationStrategy;
 import ar.edu.itba.genetic_algorithms.algorithms.replacement_strategies.ReplacementStrategy;
 import ar.edu.itba.genetic_algorithms.algorithms.selection_strategies.SelectionStrategy;
-import ar.edu.itba.genetic_algorithms.models.character.Archer;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -1,8 +1,12 @@
 package ar.edu.itba.genetic_algorithms.algorithms.engine;
 
 import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class Population {
 
@@ -39,7 +43,7 @@ public class Population {
 
 
     public double sumFitness(){
-        int accum = 0;
+        double accum = 0;
         for(Individual i : individuals){
             accum += i.getFitness();
         }
@@ -50,23 +54,22 @@ public class Population {
         return sumFitness()/populationSize;
     }
 
-    public HashMap<Individual, Double> getRelativeFitnesses(){
-        HashMap<Individual, Double> relativeFitnesses =  new HashMap<Individual, Double>();
+    public Multimap<Individual, Double> getRelativeFitnesses(){
+        Multimap<Individual, Double> relativeFitnesses = ArrayListMultimap.create();
         double totalFitness = sumFitness();
-
         for(Individual i : individuals){
             relativeFitnesses.put(i, (i.getFitness()/totalFitness));
         }
         return relativeFitnesses;
     }
 
-    public HashMap<Individual, Double> getAccumulatedRelativeFitnesses(){
-        HashMap<Individual, Double> relativeFitnesses = getRelativeFitnesses();
-        HashMap<Individual, Double> accumulatedRelativeFitnesses = new HashMap<Individual, Double>();
+    public Multimap<Individual, Double> getAccumulatedRelativeFitnesses(){
+        Multimap<Individual, Double> relativeFitnesses = getRelativeFitnesses();
+        Multimap<Individual, Double> accumulatedRelativeFitnesses = ArrayListMultimap.create();
         double accum = 0;
-        for(Map.Entry<Individual, Double> e : relativeFitnesses.entrySet()){
-            accumulatedRelativeFitnesses.put(e.getKey(), e.getValue() + accum);
+        for(Map.Entry<Individual, Double> e : relativeFitnesses.entries()){
             accum += e.getValue();
+            accumulatedRelativeFitnesses.put(e.getKey(), accum);
         }
         return accumulatedRelativeFitnesses;
     }

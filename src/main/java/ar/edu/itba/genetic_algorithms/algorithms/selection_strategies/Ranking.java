@@ -3,9 +3,10 @@ package ar.edu.itba.genetic_algorithms.algorithms.selection_strategies;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
 import ar.edu.itba.genetic_algorithms.algorithms.engine.Population;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Ranking extends AccumulatedSelectionMethod {
@@ -15,7 +16,7 @@ public class Ranking extends AccumulatedSelectionMethod {
     public List<Chromosome> select(Population population, int k) {
 
         List<Individual> individuals = population.getSortedIndividualsFromWorstToBest();
-        HashMap<Individual, Double> accumProbabilities = new HashMap<>();
+        Multimap<Individual, Double> accumProbabilities = ArrayListMultimap.create();
         int sum = sumation(individuals.size());
         double prevValue = 0;
         for (int i = 0; i < individuals.size(); i++) {

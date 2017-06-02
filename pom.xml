@@ -48,6 +48,29 @@
             <version>${org.junit.version}</version>
             <scope>test</scope>
         </dependency>
+
+
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.common/google-collect -->
+        <!--<dependency>-->
+            <!--<groupId>com.google.common</groupId>-->
+            <!--<artifactId>google-collect</artifactId>-->
+            <!--<version>0.5</version>-->
+        <!--</dependency>-->
+
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.google.guava/guava &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>com.google.guava</groupId>-->
+            <!--<artifactId>guava</artifactId>-->
+            <!--<version>r05</version>-->
+        <!--</dependency>-->
+
     </dependencies>
 
 
