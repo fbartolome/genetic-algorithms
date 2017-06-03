@@ -47,6 +47,10 @@ public class CharacterAlleleContainers implements AlleleContainerWrapper {
         return containers[positionInChromosome].getAllele(random);
     }
 
+    @Override
+    public int getAmountOfGenes() {
+        return containers.length;
+    }
 
     /**
      * Pseudo Height allele container.

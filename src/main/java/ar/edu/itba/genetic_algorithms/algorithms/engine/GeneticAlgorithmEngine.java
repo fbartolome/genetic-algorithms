@@ -54,7 +54,9 @@ public class GeneticAlgorithmEngine {
 
         while (!endingCondition.isSatisfied(population)) {
 
-            System.out.println("Generation " + population.getGeneration() + "\n\tAverage fitness: " + population.avgFitness());
+            System.out.println("Generation number: " + population.getGeneration());
+            System.out.println("\tSize: " + population.getPopulationSize());
+            System.out.println("\tAverage fitness: " + population.avgFitness());
 
             List<Chromosome> selectedChromosomes = selectionStrategy.select(population, k);
 
@@ -78,6 +80,11 @@ public class GeneticAlgorithmEngine {
 
         System.out.println("Generation " + population.getGeneration() + "\n\tAverage fitness: " + population.avgFitness());
         return population;
+    }
+
+
+    public double getActualAverageFitness() {
+        return population.avgFitness();
     }
 
 

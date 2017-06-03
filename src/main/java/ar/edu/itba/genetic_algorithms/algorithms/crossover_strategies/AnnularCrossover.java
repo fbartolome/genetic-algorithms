@@ -5,7 +5,7 @@ import ar.edu.itba.genetic_algorithms.algorithms.engine.ChromosomePair;
 
 import java.util.Random;
 
-public class AnularCrossover implements CrossoverStrategy {
+public class AnnularCrossover implements CrossoverStrategy {
     @Override
     public ChromosomePair crossover(ChromosomePair parents) {
         Random r = new Random();
