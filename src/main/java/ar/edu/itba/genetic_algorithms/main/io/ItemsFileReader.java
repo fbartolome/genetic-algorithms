@@ -1,6 +1,6 @@
 package ar.edu.itba.genetic_algorithms.main.io;
 
-import ar.edu.itba.genetic_algorithms.main.repositories.ItemsRepository;
+import ar.edu.itba.genetic_algorithms.models.alleles.ItemsRepository;
 import ar.edu.itba.genetic_algorithms.models.item.*;
 
 import java.io.IOException;

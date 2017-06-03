@@ -1,6 +1,8 @@
 package ar.edu.itba.genetic_algorithms.models.character;
 
-import ar.edu.itba.genetic_algorithms.algorithms.Individual;
+import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
+import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
+import ar.edu.itba.genetic_algorithms.algorithms.api.IndividualCreator;
 import ar.edu.itba.genetic_algorithms.models.item.*;
 
 import java.util.List;
@@ -10,8 +12,27 @@ import java.util.stream.Stream;
 /**
  * Class representing a character.
  * A character is an {@link Individual} for the Genetic Algorithms.
+ *
+ * @implNote A character's genotype is made of the following tuple:
+ * &lt;height, armor, boot, gauntlet, helmet, weapon&gt;
  */
 public abstract class Character implements Individual {
+
+
+    /**
+     * Holds a {@link Multipliers} instance to be used during all execution.
+     */
+    private static Multipliers multipliersInstance;
+
+    /**
+     * Min. height for a character.
+     */
+    public static double MIN_HEIGHT = 1.3;
+
+    /**
+     * Max. height for a character.
+     */
+    public static double MAX_HEIGHT = 2.0;
 
 
     /**
@@ -23,9 +44,6 @@ public abstract class Character implements Individual {
      * The character's equipment.
      */
     private final Equipment equipment;
-
-    private static Multipliers multipliersInstance;
-
 
 
     // ================================================
@@ -39,6 +57,28 @@ public abstract class Character implements Individual {
     private final Multipliers multipliers;          //|
     // ================================================
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Character character = (Character) o;
+
+        return Double.compare(character.height, height) == 0
+                && (equipment != null ? equipment.equals(character.equipment) : character.equipment == null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(height);
+        result = (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (equipment != null ? equipment.hashCode() : 0);
+        return result;
+    }
 
     /**
      * The character's attack.
@@ -59,7 +99,7 @@ public abstract class Character implements Individual {
      * @param multipliers The character's multipliers for the items' stats.
      */
     protected Character(double height, Equipment equipment, Multipliers multipliers) {
-        if (!(height >= 1.3 && height <= 2.0) || equipment == null || multipliers == null) {
+        if (!(height >= MIN_HEIGHT && height <= MAX_HEIGHT) || equipment == null || multipliers == null) {
             throw new IllegalArgumentException("Wrong parameters.");
         }
         this.height = height;
@@ -105,6 +145,11 @@ public abstract class Character implements Individual {
         return defense;
     }
 
+    @Override
+    public Chromosome getChromosome() {
+        return new Chromosome(height, equipment.getArmor(), equipment.getBoot(), equipment.getGauntlet(),
+                equipment.getHelmet(), equipment.getWeapon());
+    }
 
     /**
      * Creates the {@link Multipliers} instance to be used during all execution.
@@ -124,7 +169,7 @@ public abstract class Character implements Individual {
     /**
      * Builder for {@link Character}.
      */
-    public abstract static class Builder<T extends Character> {
+    public abstract static class Builder<T extends Character> implements IndividualCreator {
 
 
         /**
@@ -220,6 +265,19 @@ public abstract class Character implements Individual {
          * @return The built {@link Character}.
          */
         public abstract T build();
+
+        @Override
+        public Individual create(Chromosome chromosome) {
+            Object[] genes = chromosome.getGenes();
+            return this.height((double) genes[0])
+                    .equipment()
+                    .setArmor((Armor) genes[1])
+                    .setBoot((Boot) genes[2])
+                    .setGauntlet((Gauntlet) genes[3])
+                    .setHelmet((Helmet) genes[4])
+                    .setWeapon((Weapon) genes[5])
+                    .character().build(); // Multipliers are set in constructor.
+        }
 
 
         // =========================================================
