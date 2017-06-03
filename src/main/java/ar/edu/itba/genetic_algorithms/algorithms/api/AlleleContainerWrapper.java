@@ -13,4 +13,11 @@ public interface AlleleContainerWrapper {
      * @return The random allele.
      */
     Object getRandomAllele(int positionInChromosome);
+
+    /**
+     * Returns the amount of genes the wrapper support (i.e the amount of {@link AlleleContainer}).
+     *
+     * @return The amount of genes the wrapper support (i.e the amount of {@link AlleleContainer}).
+     */
+    int getAmountOfGenes();
 }
