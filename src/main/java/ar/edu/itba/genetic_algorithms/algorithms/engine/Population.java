@@ -39,11 +39,7 @@ public class Population {
     public Population(List<Individual> individuals, Population previousPopulation, IndividualCreator creator) {
         this.individuals = individuals;
         this.previousPopulation = previousPopulation;
-        if (previousPopulation == null) {
-            this.generation = 1;
-        } else {
-            this.generation = previousPopulation.getGeneration() + 1;
-        }
+        this.generation = previousPopulation == null ? 1 : previousPopulation.getGeneration() + 1;
         this.populationSize = individuals.size();
         this.creator = creator;
     }

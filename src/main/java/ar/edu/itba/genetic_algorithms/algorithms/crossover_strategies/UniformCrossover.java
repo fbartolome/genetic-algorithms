@@ -7,9 +7,17 @@ import java.util.Random;
 
 public class UniformCrossover implements CrossoverStrategy {
 
+    private final double p;
+
+    public UniformCrossover(double p) {
+        if(p > 1 || p < 0){
+            throw new IllegalArgumentException("Value of p must be between 0 and 1.");
+        }
+        this.p = p;
+    }
+
     @Override
     public ChromosomePair crossover(ChromosomePair parents) {
-        Random r = new Random();
         Object[] parentGenes1 = parents.getFirst().getGenes();
         Object[] parentGenes2 = parents.getSecond().getGenes();
         int chromosomeLength = parentGenes1.length;
@@ -17,17 +25,12 @@ public class UniformCrossover implements CrossoverStrategy {
         Object[] offspringGenes2 = new Object[chromosomeLength];
 
         for(int i = 0; i < chromosomeLength; i++){
-            if(r.nextBoolean()){
+            if(Math.random() > p){
                 offspringGenes1[i] = parentGenes1[i];
                 offspringGenes2[i] = parentGenes2[i];
             } else {
-                if(r.nextBoolean()){
-                    offspringGenes1[i] = parentGenes1[i];
-                    offspringGenes2[i] = parentGenes2[i];
-                } else {
-                    offspringGenes1[i] = parentGenes2[i];
-                    offspringGenes2[i] = parentGenes1[i];
-                }
+                offspringGenes1[i] = parentGenes2[i];
+                offspringGenes2[i] = parentGenes1[i];
             }
         }
 
