@@ -1,6 +1,7 @@
 package ar.edu.itba.genetic_algorithms.algorithms.engine;
 
 import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
+import ar.edu.itba.genetic_algorithms.algorithms.api.IndividualCreator;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
@@ -30,55 +31,65 @@ public class Population {
      */
     private final int populationSize;
 
-    public Population(List<Individual> individuals, Population previousPopulation){
+    /**
+     * The {@link IndividualCreator} used for creating the {@link Individual}s of this population.
+     */
+    private final IndividualCreator creator;
+
+    public Population(List<Individual> individuals, Population previousPopulation, IndividualCreator creator) {
         this.individuals = individuals;
         this.previousPopulation = previousPopulation;
-        if(previousPopulation == null){
+        if (previousPopulation == null) {
             this.generation = 1;
         } else {
             this.generation = previousPopulation.getGeneration() + 1;
         }
         this.populationSize = individuals.size();
+        this.creator = creator;
+    }
+
+    public Population(List<Individual> individuals, Population previousPopulation) {
+        this(individuals, previousPopulation, previousPopulation.getCreator());
     }
 
 
-    public double sumFitness(){
+    public double sumFitness() {
         double accum = 0;
-        for(Individual i : individuals){
+        for (Individual i : individuals) {
             accum += i.getFitness();
         }
         return accum;
     }
 
-    public double avgFitness(){
-        return sumFitness()/populationSize;
+    public double avgFitness() {
+        return sumFitness() / populationSize;
     }
 
-    public Multimap<Individual, Double> getRelativeFitnesses(){
+    public Multimap<Individual, Double> getRelativeFitnesses() {
         Multimap<Individual, Double> relativeFitnesses = ArrayListMultimap.create();
         double totalFitness = sumFitness();
-        for(Individual i : individuals){
-            relativeFitnesses.put(i, (i.getFitness()/totalFitness));
+        for (Individual i : individuals) {
+            relativeFitnesses.put(i, (i.getFitness() / totalFitness));
         }
         return relativeFitnesses;
     }
 
-    public Multimap<Individual, Double> getAccumulatedRelativeFitnesses(){
+    public Multimap<Individual, Double> getAccumulatedRelativeFitnesses() {
         Multimap<Individual, Double> relativeFitnesses = getRelativeFitnesses();
         Multimap<Individual, Double> accumulatedRelativeFitnesses = ArrayListMultimap.create();
         double accum = 0;
-        for(Map.Entry<Individual, Double> e : relativeFitnesses.entries()){
+        for (Map.Entry<Individual, Double> e : relativeFitnesses.entries()) {
             accum += e.getValue();
             accumulatedRelativeFitnesses.put(e.getKey(), accum);
         }
         return accumulatedRelativeFitnesses;
     }
 
-    public Individual bestIndividual(){
+    public Individual bestIndividual() {
         //TODO: change if list structure changes.
         Individual best = null;
-        for(Individual individual : individuals){
-            if(best == null || best.getFitness() < individual.getFitness())
+        for (Individual individual : individuals) {
+            if (best == null || best.getFitness() < individual.getFitness())
                 best = individual;
         }
         return best;
@@ -92,7 +103,7 @@ public class Population {
         return individuals;
     }
 
-    public List<Individual> getSortedIndividualsFromWorstToBest(){
+    public List<Individual> getSortedIndividualsFromWorstToBest() {
         //TODO: checkear si lo estoy ordenando bien
         List<Individual> sortedIndividuals = new ArrayList<>(individuals);
         sortedIndividuals.sort(
@@ -100,7 +111,7 @@ public class Population {
         return sortedIndividuals;
     }
 
-    public List<Individual> getSortedIndividualsFromBestToWorst(){
+    public List<Individual> getSortedIndividualsFromBestToWorst() {
         List<Individual> sortedIndividuals = new ArrayList<>(individuals);
         sortedIndividuals.sort(
                 (Individual i1, Individual i2) -> -(new Double(i1.getFitness()).compareTo(new Double(i2.getFitness()))));
@@ -113,5 +124,9 @@ public class Population {
 
     public int getPopulationSize() {
         return populationSize;
+    }
+
+    public IndividualCreator getCreator() {
+        return creator;
     }
 }
