@@ -255,7 +255,7 @@ public abstract class Character implements Individual {
         public Builder clear() {
             this.height = 0;
             this.equipment = null;
-            this.multipliers = null;
+            multipliers = multipliersInstance;
             return this;
         }
 
