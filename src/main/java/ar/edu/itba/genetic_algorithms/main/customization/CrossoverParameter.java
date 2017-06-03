@@ -1,9 +1,6 @@
 package ar.edu.itba.genetic_algorithms.main.customization;
 
-import ar.edu.itba.genetic_algorithms.algorithms.crossover_strategies.CrossoverStrategy;
-import ar.edu.itba.genetic_algorithms.algorithms.crossover_strategies.OnePointCrossover;
-import ar.edu.itba.genetic_algorithms.algorithms.crossover_strategies.TwoPointCrossover;
-import ar.edu.itba.genetic_algorithms.algorithms.crossover_strategies.UniformCrossover;
+import ar.edu.itba.genetic_algorithms.algorithms.crossover_strategies.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -14,7 +11,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  */
 @JsonSubTypes({@JsonSubTypes.Type(value = CrossoverParameter.NoParametersCrossover.class, name = "ONE_POINT"),
         @JsonSubTypes.Type(value = CrossoverParameter.NoParametersCrossover.class, name = "TWO_POINT"),
-        @JsonSubTypes.Type(value = CrossoverParameter.NoParametersCrossover.class, name = "UNIFORM"),})
+        @JsonSubTypes.Type(value = CrossoverParameter.UniformCrossoverParameters.class, name = "UNIFORM"),
+        @JsonSubTypes.Type(value = CrossoverParameter.NoParametersCrossover.class, name = "ANNULAR"),})
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
         property = "strategy",
@@ -54,6 +52,23 @@ public abstract class CrossoverParameter {
         }
     }
 
+    /**
+     * Parameters for {@link UniformCrossover} strategy.
+     */
+    /* package */ static final class UniformCrossoverParameters extends CrossoverParameter {
+
+        /**
+         * The {@link UniformCrossover} "p" parameter.
+         */
+        @JsonProperty
+        private Double p;
+
+        @Override
+        public CrossoverStrategy getStrategy() {
+            return getStrategyEnum().getStrategy(p);
+        }
+    }
+
 
     /**
      * Enum indicating types of crossovers.
@@ -75,7 +90,13 @@ public abstract class CrossoverParameter {
         UNIFORM {
             @Override
             public CrossoverStrategy getStrategy(Object... parameters) {
-                return new UniformCrossover();
+                return new UniformCrossover((double) parameters[0]);
+            }
+        },
+        ANNULAR {
+            @Override
+            protected CrossoverStrategy getStrategy(Object... parameters) {
+                return new AnnularCrossover();
             }
         };
 

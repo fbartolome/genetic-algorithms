@@ -1,7 +1,6 @@
 package ar.edu.itba.genetic_algorithms.main;
 
 import ar.edu.itba.genetic_algorithms.algorithms.api.AlleleContainerWrapper;
-import ar.edu.itba.genetic_algorithms.algorithms.api.IndividualCreator;
 import ar.edu.itba.genetic_algorithms.algorithms.crossover_strategies.CrossoverStrategy;
 import ar.edu.itba.genetic_algorithms.algorithms.end_conditions.EndingCondition;
 import ar.edu.itba.genetic_algorithms.algorithms.engine.GeneticAlgorithmEngine;
@@ -45,10 +44,6 @@ public class Main {
      */
     private final static class Initializer {
 
-        /**
-         * The initialized {@link IndividualCreator}.
-         */
-        private final IndividualCreator individualCreator;
         /**
          * The initialized {@link AlleleContainerWrapper}
          */
@@ -101,9 +96,6 @@ public class Main {
                     parameters.getCharacter().getProficiencyMultiplier(),
                     parameters.getCharacter().getResistanceMultiplier(), parameters.getCharacter().getLifeMultiplier());
 
-            // Individuals creator initialization
-            this.individualCreator = parameters.getCharacter().getCharacterBuilder();
-
 
             // Items initialization
             final ItemsRepository armors = new ItemsRepository();
@@ -135,7 +127,7 @@ public class Main {
 
             // Initial population
             this.initialPopulation = parameters.getInitialPopulation()
-                    .generateInitialPopulation(this.individualCreator, this.alleleContainers);
+                    .generateInitialPopulation(parameters.getCharacter().getCharacterBuilder(), this.alleleContainers);
         }
 
         /**
@@ -144,7 +136,7 @@ public class Main {
         private GeneticAlgorithmEngine getGeneticAlgorithmEngine() {
             return new GeneticAlgorithmEngine(this.initialPopulation, this.endingCondition, this.selectionStrategy,
                     this.k, this.crossoverStrategy, this.mutationStrategy, this.pm, this.replacementStrategy,
-                    this.alleleContainers, this.individualCreator);
+                    this.alleleContainers);
         }
 
     }
