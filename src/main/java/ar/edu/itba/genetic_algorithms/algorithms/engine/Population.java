@@ -45,6 +45,7 @@ public class Population {
     }
 
     public Population(List<Individual> individuals, Population previousPopulation) {
+        //TODO: if previousPopulation is null
         this(individuals, previousPopulation, previousPopulation.getCreator());
     }
 

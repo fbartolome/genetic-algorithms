@@ -34,12 +34,10 @@ public class GeneticAlgorithmEngine {
 
     private final AlleleContainerWrapper alleleContainerWrapper;
 
-    private final IndividualCreator individualCreator;
-
     public GeneticAlgorithmEngine(Population initialPopulation, EndingCondition endingCondition,
                                   SelectionStrategy selectionStrategy, int k,
                                   CrossoverStrategy crossoverStrategy, MutationStrategy mutationStrategy,
-                                  double pm, ReplacementStrategy replacementStrategy, AlleleContainerWrapper alleleContainerWrapper, IndividualCreator individualCreator) {
+                                  double pm, ReplacementStrategy replacementStrategy, AlleleContainerWrapper alleleContainerWrapper) {
         this.population = initialPopulation;
         this.endingCondition = endingCondition;
         this.selectionStrategy = selectionStrategy;
@@ -49,7 +47,6 @@ public class GeneticAlgorithmEngine {
         this.pm = pm;
         this.replacementStrategy = replacementStrategy;
         this.alleleContainerWrapper = alleleContainerWrapper;
-        this.individualCreator = individualCreator;
     }
 
     public Population evolve() {
@@ -74,7 +71,7 @@ public class GeneticAlgorithmEngine {
                 }
             }
 
-            List<Individual> offspringIndividuals = offspringChromosomes.stream().map(individualCreator::create).collect(Collectors.toList());
+            List<Individual> offspringIndividuals = offspringChromosomes.stream().map(population.getCreator()::create).collect(Collectors.toList());
 
             population = replacementStrategy.replace(population, offspringIndividuals);
         }
