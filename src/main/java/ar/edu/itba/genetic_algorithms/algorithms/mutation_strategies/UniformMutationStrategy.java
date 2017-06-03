@@ -5,7 +5,7 @@ import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
 
 import java.util.Random;
 
-public class CharacterMutationStrategy implements MutationStrategy {
+public class UniformMutationStrategy implements MutationStrategy {
 
     @Override
     public void mutate(Chromosome originalChromosome, AlleleContainerWrapper alleleContainerWrapper) {
