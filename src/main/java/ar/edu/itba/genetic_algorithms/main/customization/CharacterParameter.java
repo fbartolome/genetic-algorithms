@@ -93,7 +93,7 @@ public class CharacterParameter {
      * Enum with all type of {@link Character}, defining a method to get the particular character's
      * (i.e {@link Warrior}, {@link Archer}, {@link Guard}, or {@link Assassin}) builder.
      */
-    public enum CharacterType {
+    private enum CharacterType {
         WARRIOR {
             @Override
             public Character.Builder<Warrior> getCharacterBuilder() {
