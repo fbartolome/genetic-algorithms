@@ -3,7 +3,12 @@ package ar.edu.itba.genetic_algorithms.models.alleles;
 import ar.edu.itba.genetic_algorithms.algorithms.api.AlleleContainer;
 import ar.edu.itba.genetic_algorithms.algorithms.api.AlleleContainerWrapper;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * This class holds all {@link AlleleContainer} a {@link Character} may have.
@@ -41,6 +46,10 @@ public class CharacterAlleleContainers implements AlleleContainerWrapper {
 
     }
 
+    @Override
+    public Object getSpecificAllele(int alleleNumber, int positionInChromosome) {
+        return containers[positionInChromosome].getSpecificAllele(alleleNumber);
+    }
 
     @Override
     public Object getRandomAllele(int positionInChromosome) {
@@ -52,10 +61,23 @@ public class CharacterAlleleContainers implements AlleleContainerWrapper {
         return containers.length;
     }
 
+    @Override
+    public int getAmountOfAlleles(int positionInChromosome) {
+        return containers[positionInChromosome].getAmountOfAlleles();
+    }
+
+    @Override
+    public List<Integer> getAllelesNumbers(int positionInChromosome) {
+        return containers[positionInChromosome].getAllelesNumbers();
+    }
+
     /**
      * Pseudo Height allele container.
      */
     private static class HeightContainer implements AlleleContainer {
+
+        private static final int AMOUNT_OF_FIXED_HEIGHTS = 500000; // TODO: parameterize this?
+
 
         /**
          * The min. height this container will return.
@@ -67,6 +89,8 @@ public class CharacterAlleleContainers implements AlleleContainerWrapper {
          */
         private final double maxHeight;
 
+        private final Map<Integer, Double> finiteSubsetOfHeights;
+
         /**
          * Constructor.
          *
@@ -76,6 +100,15 @@ public class CharacterAlleleContainers implements AlleleContainerWrapper {
         private HeightContainer(double minHeight, double maxHeight) {
             this.minHeight = minHeight;
             this.maxHeight = maxHeight;
+            this.finiteSubsetOfHeights = new HashMap<>();
+            final double step = (maxHeight - minHeight) / AMOUNT_OF_FIXED_HEIGHTS;
+            IntStream.range(0, AMOUNT_OF_FIXED_HEIGHTS)
+                    .forEach(number -> finiteSubsetOfHeights.put(number, minHeight + (number * step)));
+        }
+
+        @Override
+        public Object getSpecificAllele(int alleleNumber) {
+            return finiteSubsetOfHeights.get(alleleNumber);
         }
 
         @Override
@@ -86,6 +119,16 @@ public class CharacterAlleleContainers implements AlleleContainerWrapper {
         @Override
         public Object getAllele() {
             return getAllele(new Random());
+        }
+
+        @Override
+        public int getAmountOfAlleles() {
+            return finiteSubsetOfHeights.size();
+        }
+
+        @Override
+        public List<Integer> getAllelesNumbers() {
+            return finiteSubsetOfHeights.keySet().stream().collect(Collectors.toList());
         }
     }
 }
