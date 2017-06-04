@@ -8,7 +8,7 @@ import com.google.common.collect.Multimap;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO probar
+
 public class Roulette extends AccumulatedSelectionMethod{
 
     public List<Chromosome> select(Population population, int k){

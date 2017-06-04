@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Ranking extends AccumulatedSelectionMethod {
-//TODO CHECK
 
     @Override
     public List<Chromosome> select(Population population, int k) {

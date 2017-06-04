@@ -8,7 +8,7 @@ import com.google.common.collect.Multimap;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO: probar
+
 public class Universal extends AccumulatedSelectionMethod {
 
     @Override
