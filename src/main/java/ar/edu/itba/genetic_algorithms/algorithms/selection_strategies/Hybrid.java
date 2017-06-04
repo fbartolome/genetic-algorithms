@@ -24,6 +24,11 @@ public class Hybrid implements SelectionStrategy {
                 strategies.stream().mapToDouble(SelectionStrategyAndPercentageWrapper::getPercentage).sum()) != 0) {
             throw new IllegalArgumentException("Percentages sum must be 1.");
         }
+        strategies.forEach(strategy -> {
+            if (strategy.getSelectionStrategy() instanceof Hybrid) {
+                throw new IllegalArgumentException("Can not use hybrid selection strategy in the hybrid selection.");
+            }
+        });
         this.strategies = strategies;
     }
 
