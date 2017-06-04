@@ -31,6 +31,7 @@ public class ReplacementStrategy2 implements ReplacementStrategy {
                 oldPopulationSelectionStrategy
                         .select(actualPopulation, actualPopulation.getPopulationSize() - offspring.size())
                         .stream()
+                        .parallel()
                         .map(chromosome -> actualPopulation.getCreator().create(chromosome)))
                 .collect(Collectors.toList()), actualPopulation);
     }

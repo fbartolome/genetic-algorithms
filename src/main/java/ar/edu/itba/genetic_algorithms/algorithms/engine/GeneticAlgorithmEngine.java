@@ -101,16 +101,21 @@ public class GeneticAlgorithmEngine {
      */
     public Population evolve() {
         while (!endingCondition.isSatisfied(population)) {
-            population = replacementStrategy.replace(population, StreamEx.of(selectionStrategy.select(population, k))
-                    .pairMap((ChromosomePair::new))
-                    .map(crossoverStrategy::crossover)
-                    .flatMap(pair -> Stream.of(pair.getFirst(), pair.getSecond()))
-                    .map(chromosome -> {
-                        if (new Random().nextDouble() < pm) {
-                            mutationStrategy.mutate(chromosome, alleleContainerWrapper);
-                        }
-                        return chromosome;
-                    }).map(each -> population.getCreator().create(each)).collect(Collectors.toList()));
+            population = replacementStrategy.replace(population,
+                    StreamEx.of(selectionStrategy.select(population, k)) // Transforms select output into stream
+                            .parallel() // Make stream parallel
+                            .pairMap((ChromosomePair::new)) // Transform each chromosome in stream into chromosome pair.
+                            .map(crossoverStrategy::crossover) // Performs crossover of chromosome pairs in stream.
+                            // Transform chromosome pair stream into chromosome stream
+                            .flatMap(pair -> Stream.of(pair.getFirst(), pair.getSecond()))
+                            .map(chromosome -> {
+                                if (new Random().nextDouble() < pm) {
+                                    mutationStrategy.mutate(chromosome, alleleContainerWrapper); // TODO: return new chromosome to avoid stateful operation
+                                }
+                                return chromosome;
+                            }) // Performs mutation
+                            .map(each -> population.getCreator().create(each)) // Transforms chromosome into individual
+                            .collect(Collectors.toList())); // Collects individuals into list and pass it to "replace".
         }
         return population;
     }

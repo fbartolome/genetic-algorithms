@@ -68,7 +68,7 @@ public class Population {
      * @return The fitness sum of all {@link Individual} of this population.
      */
     public double sumFitness() {
-        return individuals.stream().mapToDouble(Individual::getFitness).sum();
+        return individuals.stream().parallel().mapToDouble(Individual::getFitness).parallel().sum();
     }
 
     /**
@@ -86,7 +86,9 @@ public class Population {
         final double totalFitness = sumFitness();
 
         return individuals.stream()
-                .collect(new MultimapCollector<>(Function.identity(), individual -> individual.getFitness() / totalFitness));
+                .parallel()
+                .collect(new MultimapCollector<>(Function.identity(),
+                        individual -> individual.getFitness() / totalFitness));
     }
 
     /**
@@ -102,6 +104,7 @@ public class Population {
      */
     public Individual bestIndividual() {
         Optional<Individual> individual = individuals.stream()
+                .parallel()
                 .max((ind1, ind2) -> Double.compare(ind1.getFitness(), ind2.getFitness()));
         return individual.isPresent() ? individual.get() : null;
     }
@@ -202,13 +205,17 @@ public class Population {
     /**
      * {@link Collector} to use for calculating the accumulated relative fitness.
      *
-     * @implNote This {@link Collector} is not concurrent.
+     * @implNote This {@link Collector} is not concurrent, and the {@link Collector#accumulator()}
+     * method returns a stateful function.
      */
     private static class AccumulatedRelativeFitnessMapCollector
             implements Collector<Map.Entry<Individual, Double>,
             Multimap<Individual, Double>, Multimap<Individual, Double>> {
 
-        private double accumulated = 0.0;
+        /**
+         * Accumulated relative fitness.
+         */
+        private double accumulated = 0.0; // TODO: check how to do this without being stateful.
 
         @Override
         public Supplier<Multimap<Individual, Double>> supplier() {

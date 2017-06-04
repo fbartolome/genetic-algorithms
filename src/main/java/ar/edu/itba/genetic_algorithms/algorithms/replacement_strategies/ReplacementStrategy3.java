@@ -41,6 +41,7 @@ public class ReplacementStrategy3 implements ReplacementStrategy {
                 oldPopulationSelectionStrategy
                         .select(actualPopulation, actualPopulation.getPopulationSize() - k)
                         .stream()
+                        .parallel()
                         .map(chromosome -> actualPopulation.getCreator().create(chromosome)),
                 /* Previous generation and offspring individuals */
                 newPopulationSelectionStrategy
@@ -50,12 +51,14 @@ public class ReplacementStrategy3 implements ReplacementStrategy {
                                  */
                                 Stream.concat(
                                         actualPopulation.getIndividuals().stream(), offspring.stream())
+                                        .parallel()
                                         // Collect individuals in a container
                                         .collect(new IndividualsContainerCollector())
                                         .createNewPopulation(actualPopulation), // Generates a Population from container
                                 k)
                         .stream()
                         .map(chromosome -> actualPopulation.getCreator().create(chromosome)))
+                .parallel()
                 .collect(new IndividualsContainerCollector()) // Collect individuals in a container
                 .createNewPopulation(actualPopulation); // Generates a Population from container
     }
