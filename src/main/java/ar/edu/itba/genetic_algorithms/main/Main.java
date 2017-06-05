@@ -105,13 +105,13 @@ public class Main {
             final ItemsRepository weapons = new ItemsRepository();
             new ItemsFileReader(parameters.getItems().getArmorsFilePath(), armors, ItemsFileReader.ItemType.ARMOR)
                     .parse();
-            new ItemsFileReader(parameters.getItems().getArmorsFilePath(), boots, ItemsFileReader.ItemType.BOOT)
+            new ItemsFileReader(parameters.getItems().getBootsFilePath(), boots, ItemsFileReader.ItemType.BOOT)
                     .parse();
-            new ItemsFileReader(parameters.getItems().getArmorsFilePath(), gauntlets, ItemsFileReader.ItemType.GAUNTLET)
+            new ItemsFileReader(parameters.getItems().getGauntletsFilePath(), gauntlets, ItemsFileReader.ItemType.GAUNTLET)
                     .parse();
-            new ItemsFileReader(parameters.getItems().getArmorsFilePath(), helmets, ItemsFileReader.ItemType.HELMET)
+            new ItemsFileReader(parameters.getItems().getHelmetsFilePath(), helmets, ItemsFileReader.ItemType.HELMET)
                     .parse();
-            new ItemsFileReader(parameters.getItems().getArmorsFilePath(), weapons, ItemsFileReader.ItemType.WEAPON)
+            new ItemsFileReader(parameters.getItems().getWeaponsFilePath(), weapons, ItemsFileReader.ItemType.WEAPON)
                     .parse();
             this.alleleContainers = new CharacterAlleleContainers(Character.MIN_HEIGHT, Character.MAX_HEIGHT,
                     armors, boots, gauntlets, helmets, weapons);
