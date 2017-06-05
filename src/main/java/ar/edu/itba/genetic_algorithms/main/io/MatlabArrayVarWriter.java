@@ -61,15 +61,41 @@ public class MatlabArrayVarWriter {
         bld.append("median_ = [");
         createArrayRecursive(bld, engine.getPopulation(), population -> population.medianFitness());
         bld.append("];");
-        writer.println(bld.toString()); // Write "best" matlab/octave variable into file
+        writer.println(bld.toString()); // Write "median_" matlab/octave variable into file
         writer.flush(); // Flush into file
 
         bld.setLength(0); // Re use same builder.
         bld.append("worst = [");
         createArrayRecursive(bld, engine.getPopulation(), population -> population.worstFitness());
         bld.append("];");
-        writer.println(bld.toString()); // Write "best" matlab/octave variable into file
+        writer.println(bld.toString()); // Write "worst" matlab/octave variable into file
         writer.flush(); // Flush into file
+
+        bld.setLength(0); // Re use same builder.
+        bld.append("finalBestFitness = ");
+        bld.append(engine.getPopulation().bestFitness());
+        bld.append(";");
+        writer.println(bld.toString()); // Write "finalBestFitness" matlab/octave variable into file
+        writer.flush(); // Flush into file
+
+        bld.setLength(0); // Re use same builder.
+        bld.append("finalAvgFitness = ");
+        bld.append(engine.getPopulation().avgFitness());
+        bld.append(";");
+        writer.println(bld.toString()); // Write "finalAvgFitness" matlab/octave variable into file
+        writer.flush(); // Flush into file
+
+        writer.println("plot(avg,'k');");
+        writer.println("hold on");
+        writer.println("plot(best,'r');");
+        writer.println("hold on");
+        writer.println("plot(median_,'g');");
+        writer.println("hold on");
+        writer.println("plot(worst,'b');");
+        writer.println("xlabel('Generation');");
+        writer.println("ylabel('Fitness');");
+        writer.println("legend('average fitness','best fitness','median fitness','worst fitness');");
+        writer.flush();
 
         //=========================
         // Close writer
