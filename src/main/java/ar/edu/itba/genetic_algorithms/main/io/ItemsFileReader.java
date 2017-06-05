@@ -6,8 +6,12 @@ import ar.edu.itba.genetic_algorithms.models.item.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -39,12 +43,6 @@ public class ItemsFileReader {
 
 
     /**
-     * Actual {@link State} of the parser.
-     */
-    private State actualState;
-
-
-    /**
      * Constructor.
      *
      * @param path       The path to the item file.
@@ -57,72 +55,19 @@ public class ItemsFileReader {
         this.repository = repository;
         this.itemType = itemType;
         this.headers = new Header[Header.values().length];
-
-        this.actualState = new HeaderState();
-
     }
 
     /**
      * Parses the file.
      */
     public void parse() {
-        while (actualState != null) {
-            actualState = actualState.next();
-        }
+        // Parse headers
+        Arrays.stream(data.remove(0).split("\t")).map(Header::fromStringInFile)
+                .collect(Collectors.toList())
+                .toArray(headers);
+        data.stream().parallel().collect(new ItemsCollector(repository, headers, itemType));
     }
 
-
-    /**
-     * Represents a parser state.
-     */
-    private abstract class State {
-        /**
-         * @return The next state if there is more data to be parsed, or {@code null} if there is no more data.
-         */
-        protected abstract State next();
-    }
-
-    /**
-     * This {@link State} is in charge of parsing headers of the file.
-     */
-    private class HeaderState extends State {
-        @Override
-        public State next() {
-            Arrays.stream(data.remove(0).split("\t")).map(Header::fromStringInFile).collect(Collectors.toList())
-                    .toArray(headers);
-            return new ItemState();
-        }
-
-
-    }
-
-    /**
-     * This {@link State} is in charge of parsing an {@link Item} data, and store it to the {@link ItemsRepository}.
-     */
-    private class ItemState extends State {
-        @Override
-        protected State next() {
-            // If no more lines to be parsed, "EOF" was reached.
-            if (data.isEmpty()) {
-                return null;
-            }
-            final String[] line = data.remove(0).split("\t"); // Takes line from list (acting as a queue)
-            // Check file is correct.
-            if (line.length != headers.length) {
-                throw new IllegalArgumentException("Wrong file"); // TODO: create exception for this.
-            }
-            final DataWrapper wrapper = new DataWrapper();
-            IntStream.range(0, headers.length).forEach(idx -> headers[idx].wrapData(line[idx], wrapper));
-            repository.addItem(wrapper.getId(), itemType.getBuilder()
-                    .setStrength(wrapper.getStrength())
-                    .setAgility(wrapper.getAgility())
-                    .setProficiency(wrapper.getProficiency())
-                    .setResistance(wrapper.getResistance())
-                    .setLife(wrapper.getLife())
-                    .build());
-            return this; // Same state to save memory.
-        }
-    }
 
 
     /**
@@ -427,6 +372,88 @@ public class ItemsFileReader {
                 default:
                     throw new IllegalArgumentException("Unrecognized header."); // TODO: create exception for this.
             }
+        }
+    }
+
+    /**
+     * {@link Collector} to transform a {@link java.util.stream.Stream} of {@link String}
+     * into an {@link ItemsRepository}.
+     */
+    private static final class ItemsCollector implements Collector<String, Map<Integer, Item>, ItemsRepository> {
+
+        /**
+         * The repository in which the {@link Item}s will be stored.
+         */
+        private final ItemsRepository repository;
+
+        /**
+         * Array containing headers as they were read in the file.
+         */
+        private final Header[] headers;
+
+        /**
+         * The kind of {@link Item} being read.
+         */
+        private final ItemType itemType;
+
+        /**
+         * Constructor.
+         *
+         * @param repository The repository in which the {@link Item}s will be stored.
+         * @param headers    Array containing headers as they were read in the file.
+         * @param itemType   The kind of {@link Item} being read.
+         */
+        private ItemsCollector(ItemsRepository repository, Header[] headers, ItemType itemType) {
+            this.repository = repository;
+            this.headers = headers;
+            this.itemType = itemType;
+        }
+
+        @Override
+        public Supplier<Map<Integer, Item>> supplier() {
+            return HashMap::new;
+        }
+
+        @Override
+        public BiConsumer<Map<Integer, Item>, String> accumulator() {
+            return (map, str) -> {
+                final String[] line = str.split("\t");
+                // Check file is correct.
+                if (line.length != headers.length) {
+                    throw new IllegalArgumentException("Wrong file"); // TODO: create exception for this.
+                }
+
+                final DataWrapper wrapper = new DataWrapper();
+                IntStream.range(0, headers.length).forEach(idx -> headers[idx].wrapData(line[idx], wrapper));
+                map.put(wrapper.getId(), itemType.getBuilder()
+                        .setStrength(wrapper.getStrength())
+                        .setAgility(wrapper.getAgility())
+                        .setProficiency(wrapper.getProficiency())
+                        .setResistance(wrapper.getResistance())
+                        .setLife(wrapper.getLife())
+                        .build());
+            };
+        }
+
+        @Override
+        public BinaryOperator<Map<Integer, Item>> combiner() {
+            return (map1, map2) -> {
+                map1.putAll(map2);
+                return map1;
+            };
+        }
+
+        @Override
+        public Function<Map<Integer, Item>, ItemsRepository> finisher() {
+            return (map) -> {
+                map.entrySet().forEach(entry -> repository.addItem(entry.getKey(), entry.getValue()));
+                return repository;
+            };
+        }
+
+        @Override
+        public Set<Characteristics> characteristics() {
+            return Collections.singleton(Characteristics.CONCURRENT);
         }
     }
 

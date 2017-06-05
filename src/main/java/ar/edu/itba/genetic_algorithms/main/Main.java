@@ -19,6 +19,9 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Entry point.
@@ -170,52 +173,6 @@ public class Main {
                     parameters.getCharacter().getProficiencyMultiplier(),
                     parameters.getCharacter().getResistanceMultiplier(), parameters.getCharacter().getLifeMultiplier());
 
-
-            // Items initialization
-            final ItemsRepository armors = new ItemsRepository();
-            final ItemsRepository boots = new ItemsRepository();
-            final ItemsRepository gauntlets = new ItemsRepository();
-            final ItemsRepository helmets = new ItemsRepository();
-            final ItemsRepository weapons = new ItemsRepository();
-            try {
-                new ItemsFileReader(parameters.getItems().getArmorsFilePath(), armors, ItemsFileReader.ItemType.ARMOR)
-                        .parse();
-            } catch (IOException e) {
-                System.err.println("Could not open armors file.");
-                throw e;
-            }
-            try {
-                new ItemsFileReader(parameters.getItems().getBootsFilePath(), boots, ItemsFileReader.ItemType.BOOT)
-                        .parse();
-            } catch (IOException e) {
-                System.err.println("Could not open boots file.");
-                throw e;
-            }
-            try {
-                new ItemsFileReader(parameters.getItems().getGauntletsFilePath(), gauntlets,
-                        ItemsFileReader.ItemType.GAUNTLET)
-                        .parse();
-            } catch (IOException e) {
-                System.err.println("Could not open gauntlets file.");
-                throw e;
-            }
-            try {
-                new ItemsFileReader(parameters.getItems().getHelmetsFilePath(), helmets, ItemsFileReader.ItemType.HELMET)
-                        .parse();
-            } catch (IOException e) {
-                System.err.println("Could not open helmets file.");
-                throw e;
-            }
-            try {
-                new ItemsFileReader(parameters.getItems().getWeaponsFilePath(), weapons, ItemsFileReader.ItemType.WEAPON)
-                        .parse();
-            } catch (IOException e) {
-                System.err.println("Could not open weapons file.");
-                throw e;
-            }
-            this.alleleContainers = new CharacterAlleleContainers(Character.MIN_HEIGHT, Character.MAX_HEIGHT,
-                    armors, boots, gauntlets, helmets, weapons);
-
             // Engine stuff
             this.selectionStrategy = parameters.getStrategies().getSelection().getStrategy();
             this.k = parameters.getStrategies().getSelection().getK();
@@ -225,6 +182,54 @@ public class Main {
             this.replacementStrategy = parameters.getStrategies().getReplacement().getStrategy();
             this.endingCondition = parameters.getStrategies().getEnding().getStrategy();
 
+
+            // Items initialization
+            ItemsInitializer armorsInitialization = new ItemsInitializer(parameters.getItems().getArmorsFilePath(),
+                    ItemsFileReader.ItemType.ARMOR);
+            ItemsInitializer bootsInitialization = new ItemsInitializer(parameters.getItems().getBootsFilePath(),
+                    ItemsFileReader.ItemType.BOOT);
+            ItemsInitializer gauntletsInitialization = new ItemsInitializer(parameters.getItems()
+                    .getGauntletsFilePath(), ItemsFileReader.ItemType.GAUNTLET);
+            ItemsInitializer helmetsInitialization = new ItemsInitializer(parameters.getItems().getHelmetsFilePath(),
+                    ItemsFileReader.ItemType.HELMET);
+            ItemsInitializer weaponsInitialization = new ItemsInitializer(parameters.getItems().getWeaponsFilePath(),
+                    ItemsFileReader.ItemType.WEAPON);
+
+            ExecutorService executorService = Executors.newFixedThreadPool(5);
+            executorService.execute(armorsInitialization);
+            executorService.execute(bootsInitialization);
+            executorService.execute(gauntletsInitialization);
+            executorService.execute(helmetsInitialization);
+            executorService.execute(weaponsInitialization);
+            executorService.shutdown();
+            try {
+                executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+            } catch (InterruptedException ignored) {
+                // Do nothing...
+            }
+
+            // Check if all threads finished loading data correctly.
+            if (!armorsInitialization.isFinishedWell()) {
+                throw armorsInitialization.getE();
+            }
+            if (!bootsInitialization.isFinishedWell()) {
+                throw bootsInitialization.getE();
+            }
+            if (!gauntletsInitialization.isFinishedWell()) {
+                throw gauntletsInitialization.getE();
+            }
+            if (!helmetsInitialization.isFinishedWell()) {
+                throw helmetsInitialization.getE();
+            }
+            if (!weaponsInitialization.isFinishedWell()) {
+                throw weaponsInitialization.getE();
+            }
+
+
+            this.alleleContainers = new CharacterAlleleContainers(Character.MIN_HEIGHT, Character.MAX_HEIGHT,
+                    armorsInitialization.getRepository(), bootsInitialization.getRepository(),
+                    gauntletsInitialization.getRepository(), helmetsInitialization.getRepository(),
+                    weaponsInitialization.getRepository());
             // Initial population
             this.initialPopulation = parameters.getInitialPopulation()
                     .generateInitialPopulation(parameters.getCharacter().getCharacterBuilder(), this.alleleContainers);
@@ -237,6 +242,86 @@ public class Main {
             return new GeneticAlgorithmEngine(this.initialPopulation, this.endingCondition, this.selectionStrategy,
                     this.k, this.crossoverStrategy, this.mutationStrategy, this.pm, this.replacementStrategy,
                     this.alleleContainers);
+        }
+
+
+        /**
+         * {@link Runnable} task for creating an {@link ItemsRepository} from a file.
+         */
+        private static final class ItemsInitializer implements Runnable {
+
+            /**
+             * The path to the file.
+             */
+            private final String filePath;
+
+            /**
+             * The produced {@link ItemsRepository}.
+             */
+            private final ItemsRepository repository;
+
+            /**
+             * The type of item.
+             */
+            private final ItemsFileReader.ItemType itemType;
+
+            /**
+             * Indicates whether the task finished well (i.e without errors).
+             */
+            private boolean finishedWell;
+
+            /**
+             * {@link IOException} that might occur when reading the file.
+             */
+            private IOException e;
+
+
+            /**
+             * Constructor.
+             *
+             * @param filePath The path to the file.
+             * @param itemType The type of item.
+             */
+            private ItemsInitializer(String filePath, ItemsFileReader.ItemType itemType) {
+
+                this.filePath = filePath;
+                this.repository = new ItemsRepository();
+                this.itemType = itemType;
+                this.finishedWell = false;
+                this.e = null;
+            }
+
+            @Override
+            public void run() {
+                try {
+                    new ItemsFileReader(filePath, repository, itemType)
+                            .parse();
+                } catch (IOException e) {
+                    this.e = e;
+                }
+                finishedWell = true;
+            }
+
+            /**
+             * @return The {@link IOException} that might occur when reading the file.
+             */
+            private IOException getE() {
+                return e;
+            }
+
+            /**
+             * @return Whether the task finished well (i.e without errors).
+             */
+            private boolean isFinishedWell() {
+                return finishedWell;
+            }
+
+            /**
+             * @return The produced {@link ItemsRepository}.
+             */
+            private ItemsRepository getRepository() {
+                return repository;
+            }
         }
 
     }
