@@ -52,7 +52,21 @@ public class MatlabArrayVarWriter {
 
         bld.setLength(0); // Re use same builder.
         bld.append("best = [");
-        createArrayRecursive(bld, engine.getPopulation(), population -> population.bestIndividual().getFitness());
+        createArrayRecursive(bld, engine.getPopulation(), population -> population.bestFitness());
+        bld.append("];");
+        writer.println(bld.toString()); // Write "best" matlab/octave variable into file
+        writer.flush(); // Flush into file
+
+        bld.setLength(0); // Re use same builder.
+        bld.append("median_ = [");
+        createArrayRecursive(bld, engine.getPopulation(), population -> population.medianFitness());
+        bld.append("];");
+        writer.println(bld.toString()); // Write "best" matlab/octave variable into file
+        writer.flush(); // Flush into file
+
+        bld.setLength(0); // Re use same builder.
+        bld.append("worst = [");
+        createArrayRecursive(bld, engine.getPopulation(), population -> population.worstFitness());
         bld.append("];");
         writer.println(bld.toString()); // Write "best" matlab/octave variable into file
         writer.flush(); // Flush into file
