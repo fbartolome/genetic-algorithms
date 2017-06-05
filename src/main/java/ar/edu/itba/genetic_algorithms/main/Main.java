@@ -1,7 +1,6 @@
 package ar.edu.itba.genetic_algorithms.main;
 
 import ar.edu.itba.genetic_algorithms.algorithms.api.AlleleContainerWrapper;
-import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
 import ar.edu.itba.genetic_algorithms.algorithms.crossover_strategies.CrossoverStrategy;
 import ar.edu.itba.genetic_algorithms.algorithms.end_conditions.EndingCondition;
 import ar.edu.itba.genetic_algorithms.algorithms.engine.GeneticAlgorithmEngine;
@@ -11,9 +10,13 @@ import ar.edu.itba.genetic_algorithms.algorithms.replacement_strategies.Replacem
 import ar.edu.itba.genetic_algorithms.algorithms.selection_strategies.SelectionStrategy;
 import ar.edu.itba.genetic_algorithms.main.customization.Parameters;
 import ar.edu.itba.genetic_algorithms.main.io.ItemsFileReader;
+import ar.edu.itba.genetic_algorithms.main.io.MatlabArrayVarWriter;
+import ar.edu.itba.genetic_algorithms.main.io.ResultsPrinter;
 import ar.edu.itba.genetic_algorithms.models.alleles.CharacterAlleleContainers;
 import ar.edu.itba.genetic_algorithms.models.alleles.ItemsRepository;
 import ar.edu.itba.genetic_algorithms.models.character.Character;
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
 
 import java.io.IOException;
 
@@ -21,13 +24,63 @@ import java.io.IOException;
  * Entry point.
  */
 public class Main {
-    public static void main(String[] args) throws IOException {
+
+    @Parameter(names = {"-h", "--help"}, description = "Prints usage", help = true)
+    private boolean usage = false;
+
+    @Parameter(names = {"-c", "--config",}, description = "Path to configuration file.")
+    private String configFilePath = "config.json";
+
+    @Parameter(names = {"-m", "--matlab", "-o", "--octave"}, description = "States whether a Matlab/Octave " +
+            "results file must be saved.")
+    private boolean generateMatlab = false;
+
+    @Parameter(names = {"-mF", "--matlab-file", "-oF", "--octave-file"},
+            description = "Path to the Matlab/Octave results file.")
+    private String matlabScriptFile = "";
+
+    public static void main(String[] args) {
+
+        // TODO: use logger?
+
+        // Initialize main
+        Main main = new Main();
+        JCommander jCommander = new JCommander(main);
+        jCommander.setProgramName("java -jar <path-to-jar>");
+        jCommander.parse(args);
+
+        if (main.usage) {
+            jCommander.usage();
+            return;
+        }
+        try {
+            main.execute();
+        } catch (IOException e) {
+            System.err.println("Problems were encountered while executing system.");
+            System.err.println("Aborting.");
+            System.exit(1);
+        }
+    }
+
+    private void execute() throws IOException {
         System.out.println("Starting...");
         System.out.print("Reading parameters...\t");
-        Parameters parameters = Parameters.fromFile(args[0]);
+        Parameters parameters;
+        try {
+            parameters = Parameters.fromFile(configFilePath);
+        } catch (IOException e) {
+            System.err.println("Could not open configuration file.");
+            throw e;
+        }
         System.out.println("[DONE]");
         System.out.print("Initializing system...\t");
-        Initializer initializer = new Initializer(parameters);
+        Initializer initializer;
+        try {
+            initializer = new Initializer(parameters);
+        } catch (IOException e) {
+            System.err.println("Could not initialize system.");
+            throw e;
+        }
         System.out.println("[DONE]");
         System.out.print("Initializing engine...\t");
         GeneticAlgorithmEngine engine = initializer.getGeneticAlgorithmEngine();
@@ -38,34 +91,27 @@ public class Main {
         final long finishTime = System.currentTimeMillis() - startingTime;
         System.out.println("[DONE]");
         System.out.println();
-        printResults(engine.getPopulation());
+        ResultsPrinter.printResults(engine.getPopulation());
         System.out.println("\n\n\n");
         System.out.println("Population evolution took " + (finishTime / 1000) + " secs.");
 
+        if (generateMatlab || (matlabScriptFile != null && !matlabScriptFile.isEmpty())) {
+            if (matlabScriptFile == null || matlabScriptFile.isEmpty()) {
+                System.err.println("Warning: Attempted to generate Matlab/Octave file " +
+                        "without indicating output location");
+                System.err.println("Warning: Output will be saved in current working directory with \"output.m\" name");
+                matlabScriptFile = "./output.m";
+            }
 
-    }
-
-    private static void printResults(Population population) {
-        if (population == null) {
-            return;
+            try {
+                MatlabArrayVarWriter.createMatlabScript(matlabScriptFile, engine);
+            } catch (IOException e) {
+                System.err.println("Could not save matlab file.");
+            }
         }
-        printResults(population.getPreviousPopulation());
-        final Individual bestIndividual = population.bestIndividual();
-        System.out.println("Generation number: " + population.getGeneration());
-        System.out.println("\tSize: " + population.getPopulationSize());
-        System.out.println("\tAverage fitness: " + population.avgFitness());
-        System.out.println("\tBest Individual's fitness: " + bestIndividual.getFitness());
-        System.out.println("\tBest Individual's chromosome: ");
-        System.out.println("\t\t" + bestIndividual.getChromosomeStringRepresentation()
-                .replace(" - Armor", "\n\t\tArmor")
-                .replace(" - Boot", "\n\t\tBoot")
-                .replace(" - Gauntlet", "\n\t\tGauntlet")
-                .replace(" - Helmet", "\n\t\tHelmet")
-                .replace(" - Weapon", "\n\t\tWeapon"));
-        System.out.println("--------------------------------------------------------------------------------------" +
-                "-------------------------------------------------------------------------------------------------");
-        System.out.println();
+
     }
+
 
     /**
      * Class being in charge of initializing the system, based on {@link Parameters}.
@@ -131,16 +177,42 @@ public class Main {
             final ItemsRepository gauntlets = new ItemsRepository();
             final ItemsRepository helmets = new ItemsRepository();
             final ItemsRepository weapons = new ItemsRepository();
-            new ItemsFileReader(parameters.getItems().getArmorsFilePath(), armors, ItemsFileReader.ItemType.ARMOR)
-                    .parse();
-            new ItemsFileReader(parameters.getItems().getBootsFilePath(), boots, ItemsFileReader.ItemType.BOOT)
-                    .parse();
-            new ItemsFileReader(parameters.getItems().getGauntletsFilePath(), gauntlets, ItemsFileReader.ItemType.GAUNTLET)
-                    .parse();
-            new ItemsFileReader(parameters.getItems().getHelmetsFilePath(), helmets, ItemsFileReader.ItemType.HELMET)
-                    .parse();
-            new ItemsFileReader(parameters.getItems().getWeaponsFilePath(), weapons, ItemsFileReader.ItemType.WEAPON)
-                    .parse();
+            try {
+                new ItemsFileReader(parameters.getItems().getArmorsFilePath(), armors, ItemsFileReader.ItemType.ARMOR)
+                        .parse();
+            } catch (IOException e) {
+                System.err.println("Could not open armors file.");
+                throw e;
+            }
+            try {
+                new ItemsFileReader(parameters.getItems().getBootsFilePath(), boots, ItemsFileReader.ItemType.BOOT)
+                        .parse();
+            } catch (IOException e) {
+                System.err.println("Could not open boots file.");
+                throw e;
+            }
+            try {
+                new ItemsFileReader(parameters.getItems().getGauntletsFilePath(), gauntlets,
+                        ItemsFileReader.ItemType.GAUNTLET)
+                        .parse();
+            } catch (IOException e) {
+                System.err.println("Could not open gauntlets file.");
+                throw e;
+            }
+            try {
+                new ItemsFileReader(parameters.getItems().getHelmetsFilePath(), helmets, ItemsFileReader.ItemType.HELMET)
+                        .parse();
+            } catch (IOException e) {
+                System.err.println("Could not open helmets file.");
+                throw e;
+            }
+            try {
+                new ItemsFileReader(parameters.getItems().getWeaponsFilePath(), weapons, ItemsFileReader.ItemType.WEAPON)
+                        .parse();
+            } catch (IOException e) {
+                System.err.println("Could not open weapons file.");
+                throw e;
+            }
             this.alleleContainers = new CharacterAlleleContainers(Character.MIN_HEIGHT, Character.MAX_HEIGHT,
                     armors, boots, gauntlets, helmets, weapons);
 
