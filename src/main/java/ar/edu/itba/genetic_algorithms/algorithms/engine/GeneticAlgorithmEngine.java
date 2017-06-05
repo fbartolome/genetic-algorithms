@@ -1,6 +1,7 @@
 package ar.edu.itba.genetic_algorithms.algorithms.engine;
 
 import ar.edu.itba.genetic_algorithms.algorithms.api.AlleleContainerWrapper;
+import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
 import ar.edu.itba.genetic_algorithms.algorithms.crossover_strategies.CrossoverStrategy;
 import ar.edu.itba.genetic_algorithms.algorithms.end_conditions.EndingCondition;
@@ -9,6 +10,8 @@ import ar.edu.itba.genetic_algorithms.algorithms.replacement_strategies.Replacem
 import ar.edu.itba.genetic_algorithms.algorithms.selection_strategies.SelectionStrategy;
 import one.util.streamex.StreamEx;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -101,21 +104,28 @@ public class GeneticAlgorithmEngine {
      */
     public Population evolve() {
         while (!endingCondition.isSatisfied(population)) {
-            population = replacementStrategy.replace(population,
-                    StreamEx.of(selectionStrategy.select(population, k)) // Transforms select output into stream
-                            .parallel() // Make stream parallel
-                            .pairMap((ChromosomePair::new)) // Transform each chromosome in stream into chromosome pair.
-                            .map(crossoverStrategy::crossover) // Performs crossover of chromosome pairs in stream.
-                            // Transform chromosome pair stream into chromosome stream
-                            .flatMap(pair -> Stream.of(pair.getFirst(), pair.getSecond()))
-                            .map(chromosome -> {
-                                if (new Random().nextDouble() < pm) {
-                                    mutationStrategy.mutate(chromosome, alleleContainerWrapper); // TODO: return new chromosome to avoid stateful operation
-                                }
-                                return chromosome;
-                            }) // Performs mutation
-                            .map(each -> population.getCreator().create(each)) // Transforms chromosome into individual
-                            .collect(Collectors.toList())); // Collects individuals into list and pass it to "replace".
+            List<Chromosome> chromosomes = selectionStrategy.select(population, k);
+            List<ChromosomePair> chromosomePairs = new LinkedList<>();
+            for (int i = 0; i < k; i += 2) {
+                // TODO: make this in stream
+                chromosomePairs.add(new ChromosomePair(chromosomes.get(i), chromosomes.get(i + 1)));
+            }
+
+            List<Individual> individuals = chromosomePairs.stream().parallel()
+                    // Performs crossover of chromosome pairs in stream.
+                    .map(crossoverStrategy::crossover)
+                    // Transform chromosome pair stream into chromosome stream
+                    .flatMap(pair -> Stream.of(pair.getFirst(), pair.getSecond()))
+                    .map(chromosome -> {
+                        if (new Random().nextDouble() < pm) {
+                            mutationStrategy.mutate(chromosome, alleleContainerWrapper); // TODO: return new chromosome to avoid stateful operation
+                        }
+                        return chromosome;
+                    }) // Performs mutation
+                    .map(each -> population.getCreator().create(each)) // Transforms chromosome into individual
+                    .collect(Collectors.toList()); // Collects individuals into list and pass it to "replace".
+
+            population = replacementStrategy.replace(population, individuals);
         }
         return population;
     }
