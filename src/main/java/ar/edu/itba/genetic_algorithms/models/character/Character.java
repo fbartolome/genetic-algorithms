@@ -153,12 +153,12 @@ public abstract class Character implements Individual {
 
     @Override
     public String getChromosomeStringRepresentation() {
-        return "Height: " + height
-                + " - Armor: " + equipment.getArmor().toString().replace("Item type: Armor | ", "")
-                + " - Boot: " + equipment.getBoot().toString().replace("Item type: Boot | ", "")
-                + " - Gauntlet: " + equipment.getGauntlet().toString().replace("Item type: Gauntlet | ", "")
-                + " - Helmet: " + equipment.getHelmet().toString().replace("Item type: Helmet | ", "")
-                + " - Weapon: " + equipment.getWeapon().toString().replace("Item type: Weapon | ", "");
+        return "Height:\t\t" + height
+                + " - Armor:\t\t" + equipment.getArmor().toString().replace("Item type: Armor | ", "")
+                + " - Boot:\t\t" + equipment.getBoot().toString().replace("Item type: Boot | ", "")
+                + " - Gauntlet:\t" + equipment.getGauntlet().toString().replace("Item type: Gauntlet | ", "")
+                + " - Helmet:\t\t" + equipment.getHelmet().toString().replace("Item type: Helmet | ", "")
+                + " - Weapon:\t\t" + equipment.getWeapon().toString().replace("Item type: Weapon | ", "");
     }
 
     /**
