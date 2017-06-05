@@ -85,6 +85,12 @@ public abstract class Item {
     }
 
     @Override
+    public String toString() {
+        return "Item type: " + this.getClass().getSimpleName() + " | Strength: " + strength + " - Agility: " + agility
+                + " - Proficiency: " + proficiency + " - Resistance: " + resistance + " - Life: " + life;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Item)) return false;

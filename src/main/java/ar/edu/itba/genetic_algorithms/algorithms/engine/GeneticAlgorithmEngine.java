@@ -3,7 +3,6 @@ package ar.edu.itba.genetic_algorithms.algorithms.engine;
 import ar.edu.itba.genetic_algorithms.algorithms.api.AlleleContainerWrapper;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
-import ar.edu.itba.genetic_algorithms.algorithms.api.IndividualCreator;
 import ar.edu.itba.genetic_algorithms.algorithms.crossover_strategies.CrossoverStrategy;
 import ar.edu.itba.genetic_algorithms.algorithms.end_conditions.EndingCondition;
 import ar.edu.itba.genetic_algorithms.algorithms.mutation_strategies.MutationStrategy;
@@ -50,14 +49,7 @@ public class GeneticAlgorithmEngine {
     }
 
     public Population evolve() {
-
-
         while (!endingCondition.isSatisfied(population)) {
-
-            System.out.println("Generation number: " + population.getGeneration());
-            System.out.println("\tSize: " + population.getPopulationSize());
-            System.out.println("\tAverage fitness: " + population.avgFitness());
-
             List<Chromosome> selectedChromosomes = selectionStrategy.select(population, k);
 
             List<Chromosome> offspringChromosomes = new LinkedList<>();
@@ -77,8 +69,6 @@ public class GeneticAlgorithmEngine {
 
             population = replacementStrategy.replace(population, offspringIndividuals);
         }
-
-        System.out.println("Generation " + population.getGeneration() + "\n\tAverage fitness: " + population.avgFitness());
         return population;
     }
 
@@ -87,5 +77,10 @@ public class GeneticAlgorithmEngine {
         return population.avgFitness();
     }
 
-
+    /**
+     * @return The actual {@link Population}.
+     */
+    public Population getPopulation() {
+        return population;
+    }
 }
