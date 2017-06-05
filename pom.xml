@@ -157,6 +157,11 @@
                             <placement>tcm</placement>
                             <head>Implementation note:</head>
                         </tag>
+                        <tag>
+                            <name>apiNote</name>
+                            <placement>tcm</placement>
+                            <head>API note:</head>
+                        </tag>
                     </tags>
                 </configuration>
                 <executions>

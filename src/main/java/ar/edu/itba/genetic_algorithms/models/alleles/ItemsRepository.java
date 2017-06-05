@@ -4,8 +4,10 @@ import ar.edu.itba.genetic_algorithms.algorithms.api.AlleleContainer;
 import ar.edu.itba.genetic_algorithms.models.item.Item;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * Represents an item's repository.
@@ -25,6 +27,10 @@ public class ItemsRepository implements AlleleContainer {
         this.items = new HashMap<>();
     }
 
+    @Override
+    public Object getSpecificAllele(int alleleNumber) {
+        return items.get(alleleNumber);
+    }
 
     /**
      * Adds an item to the repository.
@@ -55,5 +61,15 @@ public class ItemsRepository implements AlleleContainer {
     @Override
     public Object getAllele(Random random) {
         return getItem(random.nextInt(items.size()));
+    }
+
+    @Override
+    public int getAmountOfAlleles() {
+        return items.size();
+    }
+
+    @Override
+    public List<Integer> getAllelesNumbers() {
+        return items.keySet().stream().collect(Collectors.toList());
     }
 }
