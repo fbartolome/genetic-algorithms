@@ -151,6 +151,16 @@ public abstract class Character implements Individual {
                 equipment.getHelmet(), equipment.getWeapon());
     }
 
+    @Override
+    public String getChromosomeStringRepresentation() {
+        return "Height: " + height
+                + " - Armor: " + equipment.getArmor().toString().replace("Item type: Armor | ", "")
+                + " - Boot: " + equipment.getBoot().toString().replace("Item type: Boot | ", "")
+                + " - Gauntlet: " + equipment.getGauntlet().toString().replace("Item type: Gauntlet | ", "")
+                + " - Helmet: " + equipment.getHelmet().toString().replace("Item type: Helmet | ", "")
+                + " - Weapon: " + equipment.getWeapon().toString().replace("Item type: Weapon | ", "");
+    }
+
     /**
      * Creates the {@link Multipliers} instance to be used during all execution.
      *

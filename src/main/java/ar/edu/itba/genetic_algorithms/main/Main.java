@@ -1,6 +1,7 @@
 package ar.edu.itba.genetic_algorithms.main;
 
 import ar.edu.itba.genetic_algorithms.algorithms.api.AlleleContainerWrapper;
+import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
 import ar.edu.itba.genetic_algorithms.algorithms.crossover_strategies.CrossoverStrategy;
 import ar.edu.itba.genetic_algorithms.algorithms.end_conditions.EndingCondition;
 import ar.edu.itba.genetic_algorithms.algorithms.engine.GeneticAlgorithmEngine;
@@ -28,15 +29,42 @@ public class Main {
         System.out.print("Initializing system...\t");
         Initializer initializer = new Initializer(parameters);
         System.out.println("[DONE]");
+        System.out.print("Initializing engine...\t");
         GeneticAlgorithmEngine engine = initializer.getGeneticAlgorithmEngine();
-        System.out.println("Starting engine...\t");
+        System.out.println("[DONE]");
+        System.out.print("Running engine...\t\t");
         final long startingTime = System.currentTimeMillis();
         engine.evolve();
-        System.out.println("Finished");
+        final long finishTime = System.currentTimeMillis() - startingTime;
+        System.out.println("[DONE]");
         System.out.println();
-        System.out.println("Elapsed time: " + (System.currentTimeMillis() - startingTime) / 1000 + "secs.");
-        System.out.println("Population average fitness is: " + engine.getActualAverageFitness() + ".");
+        printResults(engine.getPopulation());
+        System.out.println("\n\n\n");
+        System.out.println("Population evolution took " + (finishTime / 1000) + " secs.");
 
+
+    }
+
+    private static void printResults(Population population) {
+        if (population == null) {
+            return;
+        }
+        printResults(population.getPreviousPopulation());
+        final Individual bestIndividual = population.bestIndividual();
+        System.out.println("Generation number: " + population.getGeneration());
+        System.out.println("\tSize: " + population.getPopulationSize());
+        System.out.println("\tAverage fitness: " + population.avgFitness());
+        System.out.println("\tBest Individual's fitness: " + bestIndividual.getFitness());
+        System.out.println("\tBest Individual's chromosome: ");
+        System.out.println("\t\t" + bestIndividual.getChromosomeStringRepresentation()
+                .replace(" - Armor", "\n\t\tArmor")
+                .replace(" - Boot", "\n\t\tBoot")
+                .replace(" - Gauntlet", "\n\t\tGauntlet")
+                .replace(" - Helmet", "\n\t\tHelmet")
+                .replace(" - Weapon", "\n\t\tWeapon"));
+        System.out.println("--------------------------------------------------------------------------------------" +
+                "-------------------------------------------------------------------------------------------------");
+        System.out.println();
     }
 
     /**

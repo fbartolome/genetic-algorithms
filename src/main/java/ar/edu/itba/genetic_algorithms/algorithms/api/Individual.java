@@ -17,4 +17,9 @@ public interface Individual {
     Chromosome getChromosome();
 
 
+    default String getChromosomeStringRepresentation() {
+        return getChromosome().toString();
+    }
+
+
 }
