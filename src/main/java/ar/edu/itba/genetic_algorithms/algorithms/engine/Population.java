@@ -92,6 +92,24 @@ public class Population {
         return best;
     }
 
+    public double bestFitness(){
+        return bestIndividual().getFitness();
+    }
+
+    public double worstFitness(){
+        double worst = -1;
+        for (Individual individual : individuals) {
+            if (worst == -1 || worst > individual.getFitness())
+                worst = individual.getFitness();
+        }
+        return worst;
+    }
+    
+    public double medianFitness(){
+        List<Individual> sortedIndividuals = getSortedIndividualsFromWorstToBest();
+        return sortedIndividuals.get(populationSize/2).getFitness();
+    }
+
     public Population getPreviousPopulation() {
         return previousPopulation;
     }
