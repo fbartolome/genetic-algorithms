@@ -65,7 +65,7 @@ public class GeneticAlgorithmEngine {
                 }
             }
 
-            List<Individual> offspringIndividuals = offspringChromosomes.stream().map(population.getCreator()::create).collect(Collectors.toList());
+            List<Individual> offspringIndividuals = offspringChromosomes.stream().parallel().map(population.getCreator()::create).collect(Collectors.toList());
 
             population = replacementStrategy.replace(population, offspringIndividuals);
         }
