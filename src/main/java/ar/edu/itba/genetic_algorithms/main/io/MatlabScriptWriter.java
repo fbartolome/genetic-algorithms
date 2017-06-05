@@ -6,6 +6,7 @@ import ar.edu.itba.genetic_algorithms.algorithms.engine.Population;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Stack;
 import java.util.function.Function;
 
 /**
@@ -13,7 +14,7 @@ import java.util.function.Function;
  * with a {@link GeneticAlgorithmEngine} output after evolving an initial {@link Population}.
  * This script may be used for creating graphs in Matlab/Octave.
  */
-public class MatlabArrayVarWriter {
+public class MatlabScriptWriter {
 
     /**
      * Creates a Matlab/Octave script in which an array is defined and initialized with the given {@code engine}
@@ -52,21 +53,21 @@ public class MatlabArrayVarWriter {
 
         bld.setLength(0); // Re use same builder.
         bld.append("best = [");
-        createArrayRecursive(bld, engine.getPopulation(), population -> population.bestFitness());
+        createArrayRecursive(bld, engine.getPopulation(), Population::bestFitness);
         bld.append("];");
         writer.println(bld.toString()); // Write "best" matlab/octave variable into file
         writer.flush(); // Flush into file
 
         bld.setLength(0); // Re use same builder.
         bld.append("median_ = [");
-        createArrayRecursive(bld, engine.getPopulation(), population -> population.medianFitness());
+        createArrayRecursive(bld, engine.getPopulation(), Population::medianFitness);
         bld.append("];");
         writer.println(bld.toString()); // Write "median_" matlab/octave variable into file
         writer.flush(); // Flush into file
 
         bld.setLength(0); // Re use same builder.
         bld.append("worst = [");
-        createArrayRecursive(bld, engine.getPopulation(), population -> population.worstFitness());
+        createArrayRecursive(bld, engine.getPopulation(), Population::worstFitness);
         bld.append("];");
         writer.println(bld.toString()); // Write "worst" matlab/octave variable into file
         writer.flush(); // Flush into file
@@ -111,10 +112,14 @@ public class MatlabArrayVarWriter {
      */
     private static void createArrayRecursive(StringBuilder builder, Population population,
                                              Function<Population, Double> valueSupplier) {
-        if (population == null) {
-            return;
+        final Stack<Population> populations = new Stack<>();
+        while (population != null) {
+            populations.push(population);
+            population = population.getPreviousPopulation();
         }
-        createArrayRecursive(builder, population.getPreviousPopulation(), valueSupplier);
-        builder.append(valueSupplier.apply(population)).append(", ");
+        while (!populations.isEmpty()) {
+            population = populations.pop();
+            builder.append(valueSupplier.apply(population)).append(", ");
+        }
     }
 }

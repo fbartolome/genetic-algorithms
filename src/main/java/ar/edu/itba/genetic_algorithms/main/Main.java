@@ -10,7 +10,7 @@ import ar.edu.itba.genetic_algorithms.algorithms.replacement_strategies.Replacem
 import ar.edu.itba.genetic_algorithms.algorithms.selection_strategies.SelectionStrategy;
 import ar.edu.itba.genetic_algorithms.main.customization.Parameters;
 import ar.edu.itba.genetic_algorithms.main.io.ItemsFileReader;
-import ar.edu.itba.genetic_algorithms.main.io.MatlabArrayVarWriter;
+import ar.edu.itba.genetic_algorithms.main.io.MatlabScriptWriter;
 import ar.edu.itba.genetic_algorithms.main.io.ResultsPrinter;
 import ar.edu.itba.genetic_algorithms.models.alleles.CharacterAlleleContainers;
 import ar.edu.itba.genetic_algorithms.models.alleles.ItemsRepository;
@@ -107,7 +107,7 @@ public class Main {
             }
 
             try {
-                MatlabArrayVarWriter.createMatlabScript(matlabScriptFile, engine);
+                MatlabScriptWriter.createMatlabScript(matlabScriptFile, engine);
             } catch (IOException e) {
                 System.err.println("Could not save matlab file.");
             }
