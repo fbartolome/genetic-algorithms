@@ -74,14 +74,12 @@ public class MatlabArrayVarWriter {
         bld.setLength(0); // Re use same builder.
         bld.append("finalBestFitness = ");
         bld.append(engine.getPopulation().bestFitness());
-        bld.append(";");
         writer.println(bld.toString()); // Write "finalBestFitness" matlab/octave variable into file
         writer.flush(); // Flush into file
 
         bld.setLength(0); // Re use same builder.
         bld.append("finalAvgFitness = ");
         bld.append(engine.getPopulation().avgFitness());
-        bld.append(";");
         writer.println(bld.toString()); // Write "finalAvgFitness" matlab/octave variable into file
         writer.flush(); // Flush into file
 
