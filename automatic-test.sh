@@ -13,7 +13,7 @@ MATLAB_OUTPUT_DIRECTORY=${4};
 
 CONFIG_FILES=$(ls ${DIRECTORY});
 
-mkdir ${STDOUT_OUTPUT}; # Creates directory for storing output files.
+mkdir -p ${STDOUT_OUTPUT}; # Creates directory for storing output files.
 for config in ${CONFIG_FILES};
 do
 	JUST_NAME=${config%%.*};
