@@ -104,7 +104,7 @@ public class Population {
         }
         return worst;
     }
-    
+
     public double medianFitness(){
         List<Individual> sortedIndividuals = getSortedIndividualsFromWorstToBest();
         return sortedIndividuals.get(populationSize/2).getFitness();

@@ -22,7 +22,9 @@ public class ResultsPrinter {
         System.out.println("Generation number: " + population.getGeneration());
         System.out.println("\tSize: " + population.getPopulationSize());
         System.out.println("\tAverage fitness: " + population.avgFitness());
-        System.out.println("\tBest Individual's fitness: " + bestIndividual.getFitness());
+        System.out.println("\tBest Individual's fitness: " + population.bestFitness());
+        System.out.println("\tMedian Individual's fitness: " + population.medianFitness());
+        System.out.println("\tWorst Individual's fitness: " + population.worstFitness());
         System.out.println("\tBest Individual's chromosome: ");
         System.out.println("\t\t" + bestIndividual.getChromosomeStringRepresentation()
                 .replace(" - Armor", "\n\t\tArmor")
