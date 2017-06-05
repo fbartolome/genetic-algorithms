@@ -5,6 +5,7 @@ import ar.edu.itba.genetic_algorithms.algorithms.engine.Population;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Hybrid implements SelectionStrategy {
@@ -44,6 +45,16 @@ public class Hybrid implements SelectionStrategy {
     @Override
     public List<Chromosome> select(Population population, int k) {
 
+        final int sum = strategies.parallelStream().mapToInt(each -> (int) Math.round(k * each.getPercentage())).sum();
+        if (sum != k) {
+            Optional<SelectionStrategyAndPercentageWrapper> wrapper =
+                    strategies.parallelStream()
+                            .max((o1, o2) -> Double.compare(o1.getPercentage(), o2.getPercentage()));
+            if (wrapper.isPresent()) {
+                wrapper.get().percentage = ((Math.round(k * wrapper.get().getPercentage())) + (double) (k - sum)) / k;
+            }
+        }
+
         return strategies.stream()
                 .map(each -> each.getSelectionStrategy()
                         .select(population, (int) Math.round(k * each.getPercentage())))
@@ -64,7 +75,7 @@ public class Hybrid implements SelectionStrategy {
         /**
          * The wrapped percentage.
          */
-        private final double percentage;
+        private double percentage;
 
         /**
          * Constructor.
