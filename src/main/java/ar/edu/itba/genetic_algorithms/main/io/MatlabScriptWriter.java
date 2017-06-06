@@ -84,7 +84,7 @@ public class MatlabScriptWriter {
         writer.println(bld.toString()); // Write "finalAvgFitness" matlab/octave variable into file
         writer.flush(); // Flush into file
 
-        writer.println("save('"+ path.split("\\.")[0] +".mat','avg','best','median_                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ','worst','finalBestFitness','finalAvgFitness');");
+        writer.println("save('"+ path.split("\\.")[0] +".mat','avg','best','median_','worst','finalBestFitness','finalAvgFitness');");
         writer.println("plot(avg,'k');");
         writer.println("hold on");
         writer.println("plot(best,'r');");
