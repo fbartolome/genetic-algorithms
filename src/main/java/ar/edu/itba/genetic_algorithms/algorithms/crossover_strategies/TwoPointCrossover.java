@@ -5,6 +5,9 @@ import ar.edu.itba.genetic_algorithms.algorithms.engine.ChromosomePair;
 
 import java.util.Random;
 
+/**
+ * Class implementing the Two Point crossover method.
+ */
 public class TwoPointCrossover implements CrossoverStrategy {
 
     @Override
@@ -16,7 +19,7 @@ public class TwoPointCrossover implements CrossoverStrategy {
         int locus1 = r.nextInt(chromosomeLength);
         int locus2 = r.nextInt(chromosomeLength);
 
-        if(locus1 > locus2){
+        if (locus1 > locus2) {
             int auxLocus = locus2;
             locus2 = locus1;
             locus1 = auxLocus;
@@ -25,8 +28,8 @@ public class TwoPointCrossover implements CrossoverStrategy {
         Object[] offspringGenes1 = new Object[chromosomeLength];
         Object[] offspringGenes2 = new Object[chromosomeLength];
 
-        for(int i = 0; i < chromosomeLength; i++){
-            if(i < locus1 || i >= locus2){
+        for (int i = 0; i < chromosomeLength; i++) {
+            if (i < locus1 || i >= locus2) {
                 offspringGenes1[i] = parentGenes1[i];
                 offspringGenes2[i] = parentGenes2[i];
             } else {
@@ -38,6 +41,6 @@ public class TwoPointCrossover implements CrossoverStrategy {
         Chromosome chromosome1 = new Chromosome(offspringGenes1);
         Chromosome chromosome2 = new Chromosome(offspringGenes2);
 
-        return new ChromosomePair(chromosome1,chromosome2);
+        return new ChromosomePair(chromosome1, chromosome2);
     }
 }

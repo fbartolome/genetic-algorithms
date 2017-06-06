@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Implements the Hybrid Selection method
+ * (i.e holds several {@link SelectionStrategy}, applying them in a given percentage)
+ */
 public class Hybrid implements SelectionStrategy {
 
     /**
@@ -48,7 +52,7 @@ public class Hybrid implements SelectionStrategy {
         final int sum = strategies.parallelStream().mapToInt(each -> (int) Math.round(k * each.getPercentage())).sum();
         if (sum != k) {
             Optional<SelectionStrategyAndPercentageWrapper> wrapper =
-                    strategies.parallelStream()
+                    strategies.stream()
                             .max((o1, o2) -> Double.compare(o1.getPercentage(), o2.getPercentage()));
             if (wrapper.isPresent()) {
                 wrapper.get().percentage = ((Math.round(k * wrapper.get().getPercentage())) + (double) (k - sum)) / k;
@@ -56,6 +60,7 @@ public class Hybrid implements SelectionStrategy {
         }
 
         return strategies.stream()
+                .parallel()
                 .map(each -> each.getSelectionStrategy()
                         .select(population, (int) Math.round(k * each.getPercentage())))
                 .flatMap(List::stream)

@@ -5,6 +5,9 @@ import ar.edu.itba.genetic_algorithms.algorithms.engine.ChromosomePair;
 
 import java.util.Random;
 
+/**
+ * Class implementing the Annular crossover method.
+ */
 public class AnnularCrossover implements CrossoverStrategy {
     @Override
     public ChromosomePair crossover(ChromosomePair parents) {
@@ -13,12 +16,12 @@ public class AnnularCrossover implements CrossoverStrategy {
         Object[] parentGenes2 = parents.getSecond().getGenes();
         int chromosomeLength = parentGenes1.length;
         int locus = r.nextInt(chromosomeLength);
-        int l = r.nextInt(chromosomeLength/2);
+        int l = r.nextInt(chromosomeLength / 2);
         Object[] offspringGenes1 = new Object[chromosomeLength];
         Object[] offspringGenes2 = new Object[chromosomeLength];
 
-        for(int i = 0; i < chromosomeLength; i++){
-            if(i < locus || i > locus + l){
+        for (int i = 0; i < chromosomeLength; i++) {
+            if (i < locus || i > locus + l) {
                 offspringGenes1[i] = parentGenes1[i];
                 offspringGenes2[i] = parentGenes2[i];
             } else {
@@ -27,9 +30,9 @@ public class AnnularCrossover implements CrossoverStrategy {
             }
         }
 
-        if(locus + l > chromosomeLength){
+        if (locus + l > chromosomeLength) {
             Object auxGene;
-            for(int i = 0; i < (locus + l) - chromosomeLength; i++){
+            for (int i = 0; i < (locus + l) - chromosomeLength; i++) {
                 auxGene = offspringGenes1[i];
                 offspringGenes1[i] = offspringGenes2[i];
                 offspringGenes2[i] = auxGene;
@@ -39,6 +42,6 @@ public class AnnularCrossover implements CrossoverStrategy {
         Chromosome chromosome1 = new Chromosome(offspringGenes1);
         Chromosome chromosome2 = new Chromosome(offspringGenes2);
 
-        return new ChromosomePair(chromosome1,chromosome2);
+        return new ChromosomePair(chromosome1, chromosome2);
     }
 }

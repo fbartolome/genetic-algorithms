@@ -3,14 +3,23 @@ package ar.edu.itba.genetic_algorithms.algorithms.crossover_strategies;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
 import ar.edu.itba.genetic_algorithms.algorithms.engine.ChromosomePair;
 
-import java.util.Random;
-
+/**
+ * Class implementing the Uniform crossover method.
+ */
 public class UniformCrossover implements CrossoverStrategy {
 
+    /**
+     * The "p" parameter for uniform crossover.
+     */
     private final double p;
 
+    /**
+     * Constructor.
+     *
+     * @param p The "p" parameter for uniform crossover.
+     */
     public UniformCrossover(double p) {
-        if(p > 1 || p < 0){
+        if (p > 1 || p < 0) {
             throw new IllegalArgumentException("Value of p must be between 0 and 1.");
         }
         this.p = p;
@@ -24,8 +33,8 @@ public class UniformCrossover implements CrossoverStrategy {
         Object[] offspringGenes1 = new Object[chromosomeLength];
         Object[] offspringGenes2 = new Object[chromosomeLength];
 
-        for(int i = 0; i < chromosomeLength; i++){
-            if(Math.random() > p){
+        for (int i = 0; i < chromosomeLength; i++) {
+            if (Math.random() > p) {
                 offspringGenes1[i] = parentGenes1[i];
                 offspringGenes2[i] = parentGenes2[i];
             } else {
@@ -37,6 +46,6 @@ public class UniformCrossover implements CrossoverStrategy {
         Chromosome chromosome1 = new Chromosome(offspringGenes1);
         Chromosome chromosome2 = new Chromosome(offspringGenes2);
 
-        return new ChromosomePair(chromosome1,chromosome2);
+        return new ChromosomePair(chromosome1, chromosome2);
     }
 }

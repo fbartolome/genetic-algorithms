@@ -12,4 +12,10 @@ public interface IndividualCreator {
      * @return The created {@link Individual}.
      */
     Individual create(Chromosome chromosome);
+
+    /**
+     * @return A new instance of the implementation.
+     * @apiNote The returned object MUST be of the same class.
+     */
+    IndividualCreator createNewInstance();
 }

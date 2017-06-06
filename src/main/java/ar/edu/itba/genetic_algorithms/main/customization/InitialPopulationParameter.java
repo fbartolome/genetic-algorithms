@@ -32,6 +32,12 @@ public class InitialPopulationParameter {
     private Initialization initialization;
 
     /**
+     * Seed that can be used for initializing the {@link Population} in a pseudo random way.
+     */
+    @JsonProperty
+    private Long seed;
+
+    /**
      * @return The size of the initial {@link Population}.
      */
     public int getSize() {
@@ -48,7 +54,7 @@ public class InitialPopulationParameter {
      * @return The created {@link Population}.
      */
     public Population generateInitialPopulation(IndividualCreator creator, AlleleContainerWrapper alleles) {
-        return this.initialization.generateInitialPopulation(size, creator, alleles);
+        return this.initialization.generateInitialPopulation(size, creator, alleles, seed);
     }
 
     /**
@@ -62,7 +68,7 @@ public class InitialPopulationParameter {
         SORTED {
             @Override
             protected Population generateInitialPopulation(int populationSize, IndividualCreator creator,
-                                                           AlleleContainerWrapper alleles) {
+                                                           AlleleContainerWrapper alleles, Long seed) {
 
                 final int amountOfGenes = alleles.getAmountOfGenes();
                 final Integer[][] numbersOfAlleles = IntStream.range(0, amountOfGenes)
@@ -87,12 +93,12 @@ public class InitialPopulationParameter {
         SHUFFLE {
             @Override
             protected Population generateInitialPopulation(int populationSize, IndividualCreator creator,
-                                                           AlleleContainerWrapper alleles) {
+                                                           AlleleContainerWrapper alleles, Long seed) {
                 final List<Individual> individuals =
-                        new LinkedList<>(SORTED.generateInitialPopulation(populationSize, creator, alleles)
+                        new LinkedList<>(SORTED.generateInitialPopulation(populationSize, creator, alleles, seed)
                                 .getIndividuals());
                 // New list as population might return unmodifiable list.
-                Collections.shuffle(individuals, new Random());
+                Collections.shuffle(individuals, seed == null ? new Random() : new Random(seed));
                 return new Population(individuals, null, creator);
             }
         },
@@ -102,17 +108,42 @@ public class InitialPopulationParameter {
         RANDOM {
             @Override
             protected Population generateInitialPopulation(int populationSize, IndividualCreator creator,
-                                                           AlleleContainerWrapper alleles) {
+                                                           AlleleContainerWrapper alleles, Long seed) {
                 return new Population(IntStream.range(0, populationSize)
                         .mapToObj(i -> new Chromosome(IntStream
                                 .range(0, alleles.getAmountOfGenes()).mapToObj(alleles::getRandomAllele).toArray()))
+                        .parallel()
+                        .map(creator::create)
+                        .parallel()
+                        .collect(Collectors.toList()), null, creator);
+            }
+        },
+        /**
+         * This kind of initialization will create each individual getting random alleles, but using own {@link Random}.
+         */
+        RANDOM_SEED {
+            @Override
+            protected Population generateInitialPopulation(int populationSize, IndividualCreator creator,
+                                                           AlleleContainerWrapper alleles, Long seed) {
+                if (seed == null) {
+                    // If no seed is provided, just call RANDOM.
+                    return RANDOM.generateInitialPopulation(populationSize, creator, alleles, null);
+                }
+                final Random random = new Random(seed);
+                return new Population(IntStream.range(0, populationSize)
+                        .mapToObj(i -> new Chromosome(IntStream
+                                .range(0, alleles.getAmountOfGenes())
+                                .mapToObj(k -> {
+                                    final int randomPosition = random.nextInt(alleles.getAmountOfAlleles(k));
+                                    return alleles.getSpecificAllele(randomPosition, k);
+                                }).toArray()))
                         .map(creator::create)
                         .collect(Collectors.toList()), null, creator);
             }
         };
 
         protected abstract Population generateInitialPopulation(int populationSize, IndividualCreator creator,
-                                                                AlleleContainerWrapper alleles);
+                                                                AlleleContainerWrapper alleles, Long seed);
 
     }
 }

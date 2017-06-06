@@ -15,8 +15,17 @@ import java.util.stream.Stream;
  */
 public class ReplacementStrategy2 implements ReplacementStrategy {
 
+    /**
+     * A {@link SelectionStrategy} for selecting {@link Individual}s from the previous generation.
+     */
     private final SelectionStrategy oldPopulationSelectionStrategy;
 
+    /**
+     * Constructor.
+     *
+     * @param oldPopulationSelectionStrategy A {@link SelectionStrategy} for selecting {@link Individual}s
+     *                                       from the previous generation.
+     */
     public ReplacementStrategy2(SelectionStrategy oldPopulationSelectionStrategy) {
         this.oldPopulationSelectionStrategy = oldPopulationSelectionStrategy;
     }
@@ -31,6 +40,7 @@ public class ReplacementStrategy2 implements ReplacementStrategy {
                 oldPopulationSelectionStrategy
                         .select(actualPopulation, actualPopulation.getPopulationSize() - offspring.size())
                         .stream()
+                        .parallel()
                         .map(chromosome -> actualPopulation.getCreator().create(chromosome)))
                 .collect(Collectors.toList()), actualPopulation);
     }

@@ -6,52 +6,71 @@ import ar.edu.itba.genetic_algorithms.algorithms.engine.Population;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
+import java.util.List;
+import java.util.OptionalDouble;
+import java.util.Random;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-import java.util.*;
-
-
+/**
+ * This class implements the Boltzmann selection method.
+ */
 public class Boltzmann extends AccumulatedSelectionMethod {
 
-    private double n = 0.9;
+    /**
+     * The "n" parameters for calculating the temperature.
+     */
+    private final double n;
 
+    /**
+     * Constructor.
+     *
+     * @param n The "n" parameters for calculating the temperature.
+     */
     public Boltzmann(double n) {
         this.n = n;
-    }
-
-    public Boltzmann() {
     }
 
     @Override
     public List<Chromosome> select(Population population, int k) {
 
-        List<Double> numerators = new ArrayList<>();
-        double denominator = 0;
+        final double temp = temperature(population.getGeneration());
+        // Create a supplier of streams that contains exp(f(i) / temp) for each i : individual
+        Supplier<Stream<Double>> streamSupplier = () -> population.getIndividuals().stream()
+                .parallel()
+                .map(individual -> Math.exp(individual.getFitness() / temp));
 
-        for (Individual individual : population.getIndividuals()) {
-            numerators.add(Math.exp(individual.getFitness() / T(population.getGeneration())));
-            denominator += Math.exp(individual.getFitness() / T(population.getGeneration()));
+        List<Double> numerators = streamSupplier.get().parallel().collect(Collectors.toList());
+        final OptionalDouble optional = streamSupplier.get().mapToDouble(each -> each).parallel().average();
+        if (!optional.isPresent()) {
+            throw new IllegalArgumentException("Population has no individuals");
         }
-        denominator /= population.getPopulationSize();
-        double accum = 0;
-        int index = 0;
+        final double denominator = optional.getAsDouble();
+
         Multimap<Individual, Double> accumulatedExpVal = ArrayListMultimap.create();
-
-        for (Individual i : population.getIndividuals()) {
-            accumulatedExpVal.put(i, accum + numerators.get(index) / denominator);
-            accum += numerators.get(index) / denominator;
-            index++;
-        }
-        List<Chromosome> selectedChromosomes = new ArrayList<>();
-
-        for (int i = 0; i < k; i++) {
-            double rand = Math.random() * accum;
-            selectedChromosomes.add(selectChromosomeOnAccumulatedFitnessProbability(rand, accumulatedExpVal));
+        double accumulated = 0;
+        for (int i = 0; i < population.getPopulationSize(); i++) {
+            accumulated += (numerators.get(i) / denominator);
+            accumulatedExpVal.put(population.getIndividuals().get(i), accumulated);
         }
 
-        return selectedChromosomes;
+        final double finalAccumulated = accumulated;
+        return IntStream.range(0, k)
+                .parallel()
+                .mapToObj(i ->
+                        selectChromosomeOnAccumulatedFitnessProbability(new Random().nextDouble() * finalAccumulated,
+                                accumulatedExpVal)).collect(Collectors.toList());
     }
 
-    private double T(int generation) {
+    /**
+     * Calculates the temperature of the given {@code generation}.
+     *
+     * @param generation The generation number.
+     * @return The temperature of the given {@code generation}.
+     */
+    private double temperature(int generation) {
         return (1 / (n * generation)) + 0.1;
     }
 }

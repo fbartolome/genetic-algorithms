@@ -29,5 +29,10 @@ public class Assassin extends Character {
         public Assassin build() {
             return new Assassin(this.getHeight(), this.getEquipment(), this.getMultipliers());
         }
+
+        @Override
+        public Character.Builder<Assassin> createNewInstance() {
+            return new Builder();
+        }
     }
 }

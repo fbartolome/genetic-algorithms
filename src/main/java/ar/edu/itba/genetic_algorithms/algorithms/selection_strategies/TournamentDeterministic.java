@@ -4,13 +4,26 @@ import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
 import ar.edu.itba.genetic_algorithms.algorithms.engine.Population;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+/**
+ * This class implements the Tournament Deterministic selection method.
+ */
 public class TournamentDeterministic implements SelectionStrategy {
 
-    private int m = 3;
+    /**
+     * The "m" parameter for tournament deterministic (i.e amount of random {@link Individual}s).
+     */
+    private final int m;
 
+    /**
+     * Constructor.
+     *
+     * @param m The "m" parameter for tournament deterministic (i.e amount of random {@link Individual}s).
+     */
     public TournamentDeterministic(int m) {
         this.m = m;
     }
@@ -18,31 +31,16 @@ public class TournamentDeterministic implements SelectionStrategy {
     @Override
     public List<Chromosome> select(Population population, int k) {
 
-        List<Chromosome> selectedChromosome = new ArrayList<>();
-        List<Individual> individuals = population.getIndividuals();
+        final List<Individual> individuals = population.getIndividuals();
 
-        for(int j= 0; j<k; j++){
-
-            List<Individual> individualCandidates = new ArrayList<>();
-            for(int i = 0; i<m; i++){
-                int index = (int) (Math.random() * population.getPopulationSize());
-                individualCandidates.add(individuals.get(index));
-            }
-            selectedChromosome.add(bestChromosome(individualCandidates));
-        }
-        return selectedChromosome;
+        final int size = population.getPopulationSize();
+        return IntStream.range(0, k)
+                .parallel()
+                .mapToObj(j -> new Random().ints((long) m, 0, size)
+                        .mapToObj(individuals::get)
+                        .max(((o1, o2) -> Double.compare(o1.getFitness(), o2.getFitness())))
+                        .orElseThrow(() -> new IllegalArgumentException("Empty individuals lists."))
+                        .getChromosome())
+                .collect(Collectors.toList());
     }
-
-    private Chromosome bestChromosome(List<Individual> individualList){
-
-        Individual bestIndividual  = individualList.get(0);
-
-        for(Individual individual : individualList){
-            if(individual.getFitness() > bestIndividual.getFitness()){
-                bestIndividual = individual;
-            }
-        }
-        return bestIndividual.getChromosome();
-    }
-
 }

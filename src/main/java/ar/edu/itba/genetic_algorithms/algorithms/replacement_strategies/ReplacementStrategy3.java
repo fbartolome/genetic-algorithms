@@ -16,13 +16,30 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * This class represents the third replacement strategy.
+ */
 public class ReplacementStrategy3 implements ReplacementStrategy {
 
+    /**
+     * A {@link SelectionStrategy} for selecting {@link Individual}s from the previous generation.
+     */
     private final SelectionStrategy oldPopulationSelectionStrategy;
 
+    /**
+     * A {@link SelectionStrategy} for selecting {@link Individual}s from the new generation.
+     */
     private final SelectionStrategy newPopulationSelectionStrategy;
 
 
+    /**
+     * Constructor.
+     *
+     * @param oldPopulationSelectionStrategy A {@link SelectionStrategy} for selecting {@link Individual}s
+     *                                       from the previous generation.
+     * @param newPopulationSelectionStrategy A {@link SelectionStrategy} for selecting {@link Individual}s
+     *                                       from the new generation.
+     */
     public ReplacementStrategy3(SelectionStrategy oldPopulationSelectionStrategy,
                                 SelectionStrategy newPopulationSelectionStrategy) {
         this.oldPopulationSelectionStrategy = oldPopulationSelectionStrategy;
@@ -41,6 +58,7 @@ public class ReplacementStrategy3 implements ReplacementStrategy {
                 oldPopulationSelectionStrategy
                         .select(actualPopulation, actualPopulation.getPopulationSize() - k)
                         .stream()
+                        .parallel()
                         .map(chromosome -> actualPopulation.getCreator().create(chromosome)),
                 /* Previous generation and offspring individuals */
                 newPopulationSelectionStrategy
@@ -50,12 +68,14 @@ public class ReplacementStrategy3 implements ReplacementStrategy {
                                  */
                                 Stream.concat(
                                         actualPopulation.getIndividuals().stream(), offspring.stream())
+                                        .parallel()
                                         // Collect individuals in a container
                                         .collect(new IndividualsContainerCollector())
                                         .createNewPopulation(actualPopulation), // Generates a Population from container
                                 k)
                         .stream()
                         .map(chromosome -> actualPopulation.getCreator().create(chromosome)))
+                .parallel()
                 .collect(new IndividualsContainerCollector()) // Collect individuals in a container
                 .createNewPopulation(actualPopulation); // Generates a Population from container
     }
