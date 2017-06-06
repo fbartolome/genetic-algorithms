@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-
+/**
+ * This class implements the Universal selection method.
+ */
 public class Universal extends AccumulatedSelectionMethod {
 
     @Override
