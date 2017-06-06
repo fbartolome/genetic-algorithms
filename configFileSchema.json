@@ -1,0 +1,518 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "description": "Schema for a config file",
+    "type": "object",
+    "properties": {
+        "character": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "required": true
+                },
+                "strengthMultiplier": {
+                    "type": "number",
+                    "required": true
+                },
+                "agilityMultiplier": {
+                    "type": "number",
+                    "required": true
+                },
+                "proficiencyMultiplier": {
+                    "type": "number",
+                    "required": true
+                },
+                "resistanceMultiplier": {
+                    "type": "number",
+                    "required": true
+                },
+                "lifeMultiplier": {
+                    "type": "number",
+                    "required": true
+                }
+            },
+            "required": true
+        },
+        "items": {
+            "type":"object",
+            "properties": {
+                "armorsFilePath": {
+                    "type": "string",
+                    "required": true
+                },
+                "bootsFilePath": {
+                    "type": "string",
+                    "required": true
+                },
+                "gauntletsFilePath": {
+                    "type": "string",
+                    "required": true
+                },
+                "helmetsFilePath": {
+                    "type": "string",
+                    "required": true
+                },
+                "weaponsFilePath": {
+                    "type": "string",
+                    "required": true
+                }
+            }
+        },
+        "strategies": {
+            "selection": {
+                "type":"object",
+                "oneOf" : [
+                    {
+                        "$ref": "#/selections/boltzmann"
+                    },
+                    {
+                        "$ref": "#/selections/elite"
+                    },
+                    {
+                        "$ref": "#/selections/hybrid"
+                    },
+                    {
+                        "$ref": "#/selections/ranking"
+                    },
+                    {
+                        "$ref": "#/selections/roulette"
+                    },
+                    {
+                        "$ref": "#/selections/tournament_det"
+                    },
+                    {
+                        "$ref": "#/selections/tournament_prob"
+                    },
+                    {
+                        "$ref": "#/selections/universal"
+                    }
+                ],
+                "required":true
+            },
+            "crossover": {
+                "type": "object",
+                "oneOf" : [
+                    {
+                        "$ref": "#/crossovers/one_point"
+                    },
+                    {
+                        "$ref": "#/crossovers/two_point"
+                    },
+                    {
+                        "$ref": "#/crossovers/uniform"
+                    },
+                    {
+                        "$ref": "#/crossovers/annular"
+                    }
+                ],
+                "required":true
+            },
+            "mutation":{
+                "type": "object",
+                "oneOf" : [
+                    {
+                        "$ref": "#/mutations/uniform"
+                    }
+                ],
+                "required":true
+            },
+            "replacement":{
+                "type": "object",
+                "oneOf" : [
+                    {
+                        "$ref": "#/replacements/first"
+                    },
+                    {
+                        "$ref": "#/replacements/second"
+                    },
+                    {
+                        "$ref": "#/replacements/third"
+                    }
+                ],
+                "required":true
+            },
+            "ending":{
+                "type": "object",
+                "oneOf" : [
+                    {
+                        "$ref": "#/endings/content"
+                    },
+                    {
+                        "$ref": "#/endings/max"
+                    },
+                    {
+                        "$ref": "#/endings/optimum"
+                    },
+                    {
+                        "$ref": "#/endings/structure"
+                    }
+                ],
+                "required":true
+            }
+        },
+        "initialPopulation": {
+            "type": "object",
+            "properties": {
+                "size": {
+                    "type": "number",
+                    "required": true
+                },
+                "initialization" : {
+                    "type": "string",
+                    "enum": ["SORTED", "SHUFFLE", "RANDOM", "RANDOM_SEED"],
+                    "required": true
+                },
+                "seed": {
+                    "type": "number", // Must be a valid java long value
+                    "required": false
+                }
+            },
+            "required": true
+        }
+    },
+
+
+
+    // Selection options
+    "selections" : {
+        "boltzmann": {
+            "strategy": {
+                "type":"string",
+                "enum": ["BOLTZMANN"]
+            },
+            "k": {
+                "type": "number",
+                "required":true
+            },
+            "n": {
+                "type": "number", // Must be a valid java double value
+                "required":true
+            }
+        },
+        "elite": {
+            "strategy": {
+                "type":"string",
+                "enum": ["ELITE"]
+            },
+            "k": {
+                "type": "number",
+                "required":true
+            }
+        },
+        "hybrid": {
+            "strategy": {
+                "type":"string",
+                "enum": ["HYBRID"]
+            },
+            "k": {
+                "type": "number",
+                "required":true
+            },
+            "methods":{
+                "type": "array",
+                "items": {
+                    "type":"object",
+                    "properties": {
+                        "method": {
+                            "type": "object",
+                            "oneOf" : [
+                                {
+                                    "$ref": "#/selections/boltzmann"
+                                },
+                                {
+                                    "$ref": "#/selections/elite"
+                                },
+                                {
+                                    "$ref": "#/selections/ranking"
+                                },
+                                {
+                                    "$ref": "#/selections/roulette"
+                                },
+                                {
+                                    "$ref": "#/selections/tournament_det"
+                                },
+                                {
+                                    "$ref": "#/selections/tournament_prob"
+                                },
+                                {
+                                    "$ref": "#/selections/universal"
+                                }
+                            ],
+                            "required":true
+                        },
+                        "percentage" : {
+                            "type": "number", // Must be a valid java double value
+                            "required":true
+                        }
+                    }
+                },
+                "required":true
+                // Note that the sum of all percentages MUST add 1.
+            }
+        },
+        "ranking": {
+            "strategy": {
+                "type":"string",
+                "enum": ["RANKING"]
+            },
+            "k": {
+                "type": "number",
+                "required":true
+            }
+        },
+        "roulette": {
+            "strategy": {
+                "type":"string",
+                "enum": ["ROULETTE"]
+            },
+            "k": {
+                "type": "number",
+                "required":true
+            }
+        },
+        "tournament_det": {
+            "strategy": {
+                "type":"string",
+                "enum": ["TOURNAMENT_DETERMINISTIC"]
+            },
+            "k": {
+                "type": "number",
+                "required":true
+            },
+            "m": {
+                "type": "number", // Must be a valid java int value
+                "required":true
+            }
+        },
+        "tournament_prob": {
+            "strategy": {
+                "type":"string",
+                "enum": ["TOURNAMENT_PROBABILISTIC"]
+            },
+            "k": {
+                "type": "number",
+                "required":true
+            }
+        },
+        "universal": {
+            "strategy": {
+                "type":"string",
+                "enum": ["UNIVERSAL"]
+            },
+            "k": {
+                "type": "number",
+                "required":true
+            }
+        }
+    },
+
+    // Crossover options
+    "crossovers" : {
+        "one_point" : {
+            "strategy": {
+                "type":"string",
+                "enum": ["ONE_POINT"]
+            }
+        },
+        "two_point" : {
+            "strategy": {
+                "type":"string",
+                "enum": ["TWO_POINT"]
+            }
+        },
+        "uniform" : {
+            "strategy": {
+                "type":"string",
+                "enum": ["UNIFORM"]
+            },
+            "p": {
+                "type": "number", // Must be a valid java int value
+                "required":true
+            }
+        },
+        "annular" : {
+            "strategy": {
+                "type":"string",
+                "enum": ["ANNULAR"]
+            }
+        }
+    },
+
+    // Mutations options
+    "mutations" : {
+        "uniform" : {
+            "strategy": {
+                "type":"string",
+                "enum": ["UNIFORM"]
+            },
+            "pm" : {
+                "type": "number", // Must be a valid java double value between 0 and 1
+                "required":true
+            }
+        }
+    },
+
+    // Replacement options
+    "replacements": {
+        "first": {
+            "strategy": {
+                "type":"string",
+                "enum": ["REPLACEMENT_1"]
+            }
+        },
+        "second": {
+            "strategy": {
+                "type":"string",
+                "enum": ["REPLACEMENT_2"]
+            },
+            "oldPopulationSelection": {
+                "type":"object",
+                "oneOf" : [
+                    {
+                        "$ref": "#/selections/boltzmann"
+                    },
+                    {
+                        "$ref": "#/selections/elite"
+                    },
+                    {
+                        "$ref": "#/selections/hybrid"
+                    },
+                    {
+                        "$ref": "#/selections/ranking"
+                    },
+                    {
+                        "$ref": "#/selections/roulette"
+                    },
+                    {
+                        "$ref": "#/selections/tournament_det"
+                    },
+                    {
+                        "$ref": "#/selections/tournament_prob"
+                    },
+                    {
+                        "$ref": "#/selections/universal"
+                    }
+                ],
+                "required":true
+            }
+        },
+        "third": {
+            "strategy": {
+                "type":"string",
+                "enum": ["REPLACEMENT_3"]
+            },
+            "oldPopulationSelection": {
+                "type":"object",
+                "oneOf" : [
+                    {
+                        "$ref": "#/selections/boltzmann"
+                    },
+                    {
+                        "$ref": "#/selections/elite"
+                    },
+                    {
+                        "$ref": "#/selections/hybrid"
+                    },
+                    {
+                        "$ref": "#/selections/ranking"
+                    },
+                    {
+                        "$ref": "#/selections/roulette"
+                    },
+                    {
+                        "$ref": "#/selections/tournament_det"
+                    },
+                    {
+                        "$ref": "#/selections/tournament_prob"
+                    },
+                    {
+                        "$ref": "#/selections/universal"
+                    }
+                ],
+                "required":true
+            },
+            "newPopulationSelection": {
+                "type":"object",
+                "oneOf" : [
+                    {
+                        "$ref": "#/selections/boltzmann"
+                    },
+                    {
+                        "$ref": "#/selections/elite"
+                    },
+                    {
+                        "$ref": "#/selections/hybrid"
+                    },
+                    {
+                        "$ref": "#/selections/ranking"
+                    },
+                    {
+                        "$ref": "#/selections/roulette"
+                    },
+                    {
+                        "$ref": "#/selections/tournament_det"
+                    },
+                    {
+                        "$ref": "#/selections/tournament_prob"
+                    },
+                    {
+                        "$ref": "#/selections/universal"
+                    }
+                ],
+                "required":true
+            }
+        }
+    },
+
+    // ending options
+    "endings": {
+        "content": {
+            "strategy": {
+                "type":"string",
+                "enum": ["CONTENT"]
+            },
+            "generations" : {
+                "type": "number", // Must be a valid java int value
+                "required":true
+            }
+        },
+        "max": {
+            "strategy": {
+                "type":"string",
+                "enum": ["MAX_GENERATIONS"]
+            },
+            "maxGenerations" : {
+                "type": "number", // Must be a valid java int value
+                "required":true
+            }
+        },
+        "optimum": {
+            "strategy": {
+                "type":"string",
+                "enum": ["OPTIMUM"]
+            },
+            "optimumFitness" : {
+                "type": "number", // Must be a valid java double value
+                "required":true
+            }
+        },
+        "structure": {
+            "strategy": {
+                "type":"string",
+                "enum": ["STRUCTURE"]
+            },
+            "tolerance" : {
+                "type": "number", // Must be a valid java double value
+                "required":true
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
