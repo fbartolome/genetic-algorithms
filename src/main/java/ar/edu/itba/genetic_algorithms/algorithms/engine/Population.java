@@ -118,7 +118,7 @@ public class Population {
      */
     public Individual worstIndividual() {
         Optional<Individual> individual = individuals.stream()
-                .max((ind1, ind2) -> Double.compare(ind1.getFitness(), ind2.getFitness()));
+                .min((ind1, ind2) -> Double.compare(ind1.getFitness(), ind2.getFitness()));
         return individual.isPresent() ? individual.get() : null;
     }
 
