@@ -6,42 +6,35 @@ import ar.edu.itba.genetic_algorithms.algorithms.engine.Population;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+/**
+ * This class implements the Ranking selection method.
+ */
 public class Ranking extends AccumulatedSelectionMethod {
 
     @Override
     public List<Chromosome> select(Population population, int k) {
 
-        List<Individual> individuals = population.getSortedIndividualsFromWorstToBest();
-        Multimap<Individual, Double> accumProbabilities = ArrayListMultimap.create();
-        int sum = sumation(individuals.size());
+        final List<Individual> individuals = population.getSortedIndividualsFromWorstToBest();
+        final int populationSize = population.getPopulationSize();
+        final int sum = (populationSize * (populationSize + 1)) / 2;
+
+        final Multimap<Individual, Double> accumulatedProbabilities = ArrayListMultimap.create();
         double prevValue = 0;
-        for (int i = 0; i < individuals.size(); i++) {
-            prevValue =  prevValue + ((double)(i+1) / sum);
-            accumProbabilities.put(individuals.get(i), prevValue);
+        for (int i = 0; i < populationSize; i++) {
+            prevValue += ((double) (i + 1) / sum);
+            accumulatedProbabilities.put(individuals.get(i), prevValue);
         }
 
-        List<Chromosome> selectedChromosomes = new ArrayList<>();
-
-        for (int i = 0; i < k; i++) {
-            double rand = Math.random();
-            selectedChromosomes.add(selectChromosomeOnAccumulatedFitnessProbability(rand, accumProbabilities));
-        }
-
-        return selectedChromosomes;
-    }
-
-
-    private int sumation(int num){
-        int accum = 0;
-        for(int i=1; i<=num; i++){
-            accum+=i;
-        }
-        return accum;
+        return IntStream.range(0, k)
+                .parallel()
+                .mapToObj(i ->
+                        selectChromosomeOnAccumulatedFitnessProbability(new Random().nextDouble(),
+                                accumulatedProbabilities)).collect(Collectors.toList());
 
     }
-
 }
-
