@@ -5,6 +5,9 @@ import ar.edu.itba.genetic_algorithms.algorithms.engine.ChromosomePair;
 
 import java.util.Random;
 
+/**
+ * Class implementing the One Point crossover method.
+ */
 public class OnePointCrossover implements CrossoverStrategy {
 
     @Override
@@ -17,8 +20,8 @@ public class OnePointCrossover implements CrossoverStrategy {
         Object[] offspringGenes1 = new Object[chromosomeLength];
         Object[] offspringGenes2 = new Object[chromosomeLength];
 
-        for(int i = 0; i < chromosomeLength; i++){
-            if(i < locus){
+        for (int i = 0; i < chromosomeLength; i++) {
+            if (i < locus) {
                 offspringGenes1[i] = parentGenes1[i];
                 offspringGenes2[i] = parentGenes2[i];
             } else {
@@ -30,6 +33,6 @@ public class OnePointCrossover implements CrossoverStrategy {
         Chromosome chromosome1 = new Chromosome(offspringGenes1);
         Chromosome chromosome2 = new Chromosome(offspringGenes2);
 
-        return new ChromosomePair(chromosome1,chromosome2);
+        return new ChromosomePair(chromosome1, chromosome2);
     }
 }
