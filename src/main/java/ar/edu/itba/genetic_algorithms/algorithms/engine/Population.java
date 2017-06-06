@@ -95,7 +95,8 @@ public class Population {
      * @return The accumulated relative fitness of this population.
      */
     public Multimap<Individual, Double> getAccumulatedRelativeFitnesses() {
-        return getRelativeFitnesses().entries().stream().collect(new AccumulatedRelativeFitnessMapCollector());
+        return getRelativeFitnesses().entries().stream().sequential() // Collector used is not concurrent and stateful.
+                .collect(new AccumulatedRelativeFitnessMapCollector());
     }
 
     /**
