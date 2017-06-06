@@ -3,6 +3,7 @@ package ar.edu.itba.genetic_algorithms.algorithms.engine;
 import ar.edu.itba.genetic_algorithms.algorithms.api.AlleleContainerWrapper;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Chromosome;
 import ar.edu.itba.genetic_algorithms.algorithms.api.Individual;
+import ar.edu.itba.genetic_algorithms.algorithms.api.IndividualCreator;
 import ar.edu.itba.genetic_algorithms.algorithms.crossover_strategies.CrossoverStrategy;
 import ar.edu.itba.genetic_algorithms.algorithms.end_conditions.EndingCondition;
 import ar.edu.itba.genetic_algorithms.algorithms.mutation_strategies.MutationStrategy;
@@ -111,7 +112,8 @@ public class GeneticAlgorithmEngine {
                 chromosomePairs.add(new ChromosomePair(chromosomes.get(i), chromosomes.get(i + 1)));
             }
 
-            List<Individual> individuals = chromosomePairs.stream().parallel()
+            List<Individual> individuals = chromosomePairs.stream()
+                    .parallel()
                     // Performs crossover of chromosome pairs in stream.
                     .map(crossoverStrategy::crossover)
                     // Transform chromosome pair stream into chromosome stream
@@ -122,6 +124,7 @@ public class GeneticAlgorithmEngine {
                         }
                         return chromosome;
                     }) // Performs mutation
+                    .parallel()
                     .map(each -> population.getCreator().create(each)) // Transforms chromosome into individual
                     .collect(Collectors.toList()); // Collects individuals into list and pass it to "replace".
 
