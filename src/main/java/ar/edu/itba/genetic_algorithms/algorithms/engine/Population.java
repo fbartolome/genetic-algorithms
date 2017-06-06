@@ -49,6 +49,8 @@ public class Population {
      *
      * @param individuals        The individuals belonging to the population.
      * @param previousPopulation The previous population (from which this new one is created from).
+     * @param creator            The {@link IndividualCreator} used for creating the {@link Individual}s
+     *                           of this population.
      */
     public Population(List<Individual> individuals, Population previousPopulation, IndividualCreator creator) {
         this.individuals = individuals;

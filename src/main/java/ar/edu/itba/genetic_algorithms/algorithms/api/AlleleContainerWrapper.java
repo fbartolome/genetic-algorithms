@@ -49,6 +49,7 @@ public interface AlleleContainerWrapper {
     int getAmountOfAlleles(int positionInChromosome);
 
     /**
+     * @param positionInChromosome The position of the gen in a defined {@link Chromosome}.
      * @return A {@link List} of alleles numbers of those alleles held in the container
      * of the given {@code positionInChromosome}.
      * @apiNote For infinite amount of alleles container, define a finite subset of alleles,

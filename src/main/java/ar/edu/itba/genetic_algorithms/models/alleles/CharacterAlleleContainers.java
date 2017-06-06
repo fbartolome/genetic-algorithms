@@ -2,6 +2,8 @@ package ar.edu.itba.genetic_algorithms.models.alleles;
 
 import ar.edu.itba.genetic_algorithms.algorithms.api.AlleleContainer;
 import ar.edu.itba.genetic_algorithms.algorithms.api.AlleleContainerWrapper;
+import ar.edu.itba.genetic_algorithms.models.character.Character;
+import ar.edu.itba.genetic_algorithms.models.item.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +31,15 @@ public class CharacterAlleleContainers implements AlleleContainerWrapper {
 
 
     /**
-     * Private constructor for SINGLETON use.
+     * Constructor.
+     *
+     * @param minHeight           The min. height a {@link Character} might have.
+     * @param maxHeight           The max. height a {@link Character} might have.
+     * @param armorsRepository    The {@link ItemsRepository} holding {@link Armor}s.
+     * @param bootsRepository     The {@link ItemsRepository} holding {@link Boot}s.
+     * @param gauntletsRepository The {@link ItemsRepository} holding {@link Gauntlet}s.
+     * @param helmetsRepository   The {@link ItemsRepository} holding {@link Helmet}s.
+     * @param weaponsRepository   The {@link ItemsRepository} holding {@link Weapon}s.
      */
     public CharacterAlleleContainers(double minHeight, double maxHeight,
                                      ItemsRepository armorsRepository, ItemsRepository bootsRepository,
