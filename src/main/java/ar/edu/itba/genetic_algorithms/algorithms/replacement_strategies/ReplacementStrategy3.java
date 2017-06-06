@@ -16,13 +16,30 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * This class represents the third replacement strategy.
+ */
 public class ReplacementStrategy3 implements ReplacementStrategy {
 
+    /**
+     * A {@link SelectionStrategy} for selecting {@link Individual}s from the previous generation.
+     */
     private final SelectionStrategy oldPopulationSelectionStrategy;
 
+    /**
+     * A {@link SelectionStrategy} for selecting {@link Individual}s from the new generation.
+     */
     private final SelectionStrategy newPopulationSelectionStrategy;
 
 
+    /**
+     * Constructor.
+     *
+     * @param oldPopulationSelectionStrategy A {@link SelectionStrategy} for selecting {@link Individual}s
+     *                                       from the previous generation.
+     * @param newPopulationSelectionStrategy A {@link SelectionStrategy} for selecting {@link Individual}s
+     *                                       from the new generation.
+     */
     public ReplacementStrategy3(SelectionStrategy oldPopulationSelectionStrategy,
                                 SelectionStrategy newPopulationSelectionStrategy) {
         this.oldPopulationSelectionStrategy = oldPopulationSelectionStrategy;
