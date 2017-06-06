@@ -277,9 +277,9 @@ public abstract class Character implements Individual {
         public abstract T build();
 
         @Override
-        public synchronized Individual create(Chromosome chromosome) {
+        public Individual create(Chromosome chromosome) {
             Object[] genes = chromosome.getGenes();
-            return this.height((double) genes[0])
+            return ((Builder) this.createNewInstance()).height((double) genes[0])
                     .equipment()
                     .setArmor((Armor) genes[1])
                     .setBoot((Boot) genes[2])
