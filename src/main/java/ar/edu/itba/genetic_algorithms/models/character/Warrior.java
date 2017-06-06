@@ -29,6 +29,11 @@ public class Warrior extends Character {
         public Warrior build() {
             return new Warrior(this.getHeight(), this.getEquipment(), this.getMultipliers());
         }
+
+        @Override
+        public Character.Builder<Warrior> createNewInstance() {
+            return new Builder();
+        }
     }
 
 }

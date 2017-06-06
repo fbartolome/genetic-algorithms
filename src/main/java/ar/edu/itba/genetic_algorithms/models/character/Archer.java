@@ -29,5 +29,10 @@ public class Archer extends Character {
         public Archer build() {
             return new Archer(this.getHeight(), this.getEquipment(), this.getMultipliers());
         }
+
+        @Override
+        public Character.Builder<Archer> createNewInstance() {
+            return new Builder();
+        }
     }
 }

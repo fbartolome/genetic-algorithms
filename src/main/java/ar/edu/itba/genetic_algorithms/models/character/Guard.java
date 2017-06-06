@@ -29,5 +29,10 @@ public class Guard extends Character {
         public Guard build() {
             return new Guard(this.getHeight(), this.getEquipment(), this.getMultipliers());
         }
+
+        @Override
+        public Character.Builder<Guard> createNewInstance() {
+            return new Builder();
+        }
     }
 }
