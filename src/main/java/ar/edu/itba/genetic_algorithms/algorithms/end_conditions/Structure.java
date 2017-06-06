@@ -34,6 +34,6 @@ public class Structure implements EndingCondition {
                 .filter(newIndividual -> population.getPreviousPopulation().getIndividuals().contains(newIndividual))
                 .count();
 
-        return tolerance < sameIndividuals / population.getPopulationSize();
+        return tolerance < (double)sameIndividuals / population.getPopulationSize();
     }
 }
