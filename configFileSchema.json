@@ -464,7 +464,7 @@
         }
     },
 
-    // ending options
+    // Ending options
     "endings": {
         "content": {
             "strategy": {

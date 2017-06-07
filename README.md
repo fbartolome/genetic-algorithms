@@ -558,7 +558,7 @@ The following is a JSON Schema, according to http://json-schema.org/
             }
         },
 
-        // ending options
+        // Ending options
         "endings": {
             "content": {
                 "strategy": {

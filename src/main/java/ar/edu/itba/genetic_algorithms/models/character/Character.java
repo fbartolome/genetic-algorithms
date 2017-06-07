@@ -566,8 +566,6 @@ public abstract class Character implements Individual {
 
     /**
      * Class representing multipliers of {@link Item} stats.
-     * <p>
-     * Created by Juan Marcos Bellini on 24/5/17.
      */
     /* package */ static class Multipliers {
 
