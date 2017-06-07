@@ -35,6 +35,7 @@ public abstract class Character implements Individual {
     public static double MAX_HEIGHT = 2.0;
 
 
+
     /**
      * The character's height.
      */
@@ -44,41 +45,6 @@ public abstract class Character implements Individual {
      * The character's equipment.
      */
     private final Equipment equipment;
-
-
-    // ================================================
-    // Instance variables that might be removed.    //|
-    // ================================================
-    private final double strength;                  //|
-    private final double agility;                   //|
-    private final double proficiency;               //|
-    private final double life;                      //|
-    private final double resistance;                //|
-    private final Multipliers multipliers;          //|
-    // ================================================
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Character character = (Character) o;
-
-        return Double.compare(character.height, height) == 0
-                && (equipment != null ? equipment.equals(character.equipment) : character.equipment == null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        temp = Double.doubleToLongBits(height);
-        result = (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (equipment != null ? equipment.hashCode() : 0);
-        return result;
-    }
 
     /**
      * The character's attack.
@@ -104,18 +70,17 @@ public abstract class Character implements Individual {
         }
         this.height = height;
         this.equipment = equipment;
-        this.multipliers = multipliers;
 
         // Character's stats
         List<Item> items = equipment.asItemList();
-        this.strength = 100 * Math.tanh(0.01 * multipliers.strength * items.stream().mapToDouble(Item::getStrength)
+        final double strength = 100 * Math.tanh(0.01 * multipliers.strength * items.stream().mapToDouble(Item::getStrength)
                 .sum());
-        this.agility = Math.tanh(0.01 * multipliers.agility * items.stream().mapToDouble(Item::getAgility).sum());
-        this.proficiency = 0.6 * Math.tanh(0.01 * multipliers.proficiency * items.stream()
+        final double agility = Math.tanh(0.01 * multipliers.agility * items.stream().mapToDouble(Item::getAgility).sum());
+        final double proficiency = 0.6 * Math.tanh(0.01 * multipliers.proficiency * items.stream()
                 .mapToDouble(Item::getProficiency).sum());
-        this.resistance = Math.tanh(0.01 * multipliers.resistance * items.stream().mapToDouble(Item::getResistance)
+        final double resistance = Math.tanh(0.01 * multipliers.resistance * items.stream().mapToDouble(Item::getResistance)
                 .sum());
-        this.life = 100 * Math.tanh(0.01 * multipliers.life * items.stream().mapToDouble(Item::getLife).sum());
+        final double life = 100 * Math.tanh(0.01 * multipliers.life * items.stream().mapToDouble(Item::getLife).sum());
 
 
         // Modifiers
@@ -126,10 +91,31 @@ public abstract class Character implements Individual {
         double defenseModifier = 2 + pow4 - pow2 - halfHeight;
 
         // Attack and defense
-        this.attack = (this.agility + this.proficiency) * this.strength * attackModifier;
-        this.defense = (this.resistance + this.proficiency) * this.life * defenseModifier;
+        this.attack = (agility + proficiency) * strength * attackModifier;
+        this.defense = (resistance + proficiency) * life * defenseModifier;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Character character = (Character) o;
+
+        return Double.compare(character.height, height) == 0
+                && (equipment != null ? equipment.equals(character.equipment) : character.equipment == null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(height);
+        result = (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (equipment != null ? equipment.hashCode() : 0);
+        return result;
+    }
 
     /**
      * @return The attack of the character.
